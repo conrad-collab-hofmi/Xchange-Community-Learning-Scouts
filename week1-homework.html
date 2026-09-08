@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 1 Homework - Raft Building</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+            color: #2c3e50;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        
+        :root {
+            --terracotta: #963417;
+            --pina: #2D5016;
+            --acqua: #628981;
+            --solace: #CF893A;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--terracotta) 0%, #7a2812 100%);
+            color: white;
+            padding: 30px;
+            margin: -50px -50px 40px -50px;
+            border-radius: 8px 8px 0 0;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        
+        .header .info-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 15px;
+            font-size: 0.95em;
+        }
+        
+        .badge {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 0.8em;
+            text-align: center;
+        }
+        
+        .badge.top-right {
+            top: 15px;
+            right: 15px;
+            background: var(--solace);
+            border: 3px solid white;
+        }
+        
+        .badge.bottom-right {
+            bottom: 15px;
+            right: 15px;
+            background: var(--acqua);
+            border: 3px solid white;
+        }
+        
+        .instructions-box {
+            background: var(--solace);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            border-left: 5px solid var(--terracotta);
+        }
+        
+        .instructions-box p {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        
+        .section {
+            margin: 40px 0;
+            page-break-inside: avoid;
+        }
+        
+        .section h2 {
+            color: var(--terracotta);
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--solace);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .points {
+            display: inline-block;
+            background: var(--acqua);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-left: auto;
+        }
+        
+        .rubric {
+            background: var(--acqua);
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+        
+        .rubric strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .question-block {
+            background: var(--solace);
+            color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+            border-left: 5px solid var(--terracotta);
+        }
+        
+        .question-block p {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        
+        .answer-space {
+            border: 2px dashed var(--terracotta);
+            min-height: 80px;
+            padding: 15px;
+            margin: 15px 0;
+            background: #fafafa;
+            border-radius: 4px;
+        }
+        
+        .answer-space.short {
+            min-height: 50px;
+        }
+        
+        .answer-space.medium {
+            min-height: 100px;
+        }
+        
+        .answer-space.tall {
+            min-height: 150px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+        
+        table th {
+            background: var(--terracotta);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            background: white;
+        }
+        
+        table tr:nth-child(even) td {
+            background: #f9f9f9;
+        }
+        
+        .input-field {
+            border: none;
+            border-bottom: 2px solid var(--terracotta);
+            padding: 5px;
+            font-size: 0.95em;
+            width: 100%;
+            margin: 5px 0;
+        }
+        
+        .problem {
+            background: #f0f0f0;
+            border-left: 5px solid var(--acqua);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .problem h4 {
+            color: var(--terracotta);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .problem-step {
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 4px;
+            border-left: 3px solid var(--solace);
+        }
+        
+        .problem-step strong {
+            display: block;
+            color: var(--terracotta);
+            margin-bottom: 8px;
+        }
+        
+        .bonus-box {
+            background: linear-gradient(135deg, var(--pina) 0%, #3d621a 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 40px 0;
+            border: 3px dashed var(--solace);
+        }
+        
+        .bonus-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        .checklist {
+            background: var(--pina);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+        
+        .checklist h3 {
+            margin-bottom: 15px;
+        }
+        
+        .checklist-item {
+            margin: 8px 0;
+        }
+        
+        .checklist-item input[type="checkbox"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .feedback-section {
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 40px;
+        }
+        
+        .footer-note {
+            background: var(--solace);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .footer-note strong {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="badge top-right">
+                TRAIL<br>BLAZER
+            </div>
+            <h1>WEEK 1 HOMEWORK</h1>
+            <p style="font-size: 1.2em; margin-bottom: 20px;">Raft Building Fundamentals</p>
+            
+            <div class="info-row">
+                <div>
+                    <strong>Name:</strong><br>
+                    <input type="text" class="input-field" style="width: 100%; border: none; border-bottom: 2px solid white;">
+                </div>
+                <div>
+                    <strong>Date:</strong><br>
+                    <input type="text" class="input-field" style="width: 100%; border: none; border-bottom: 2px solid white;">
+                </div>
+                <div>
+                    <strong>Score:</strong><br>
+                    <span style="font-size: 1.2em;">_____ / 100</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Instructions -->
+        <div class="instructions-box">
+            <p><strong>📝 Instructions:</strong></p>
+            <p>Complete all three sections below. Show your work for all calculations. Use the concepts from Week 1 class to answer reflection questions. Bring completed homework to Week 2.</p>
+        </div>
+        
+        <!-- SECTION 1: MATERIAL RESEARCH -->
+        <div class="section">
+            <h2>
+                <span>Section 1: Material Research</span>
+                <span class="points">25 pts</span>
+            </h2>
+            
+            <div class="rubric">
+                <strong>Grading Rubric:</strong>
+                Material properties correctly identified (15 pts) • Realistic pricing/sourcing info (10 pts)
+            </div>
+            
+            <p><strong>Instructions:</strong> Research each material listed below and complete the information. You can use the internet, talk to store employees, or reference materials from the class.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Density (kg/L)</th>
+                        <th>Cost Estimate (ZAR)</th>
+                        <th>Buoyancy Rating</th>
+                        <th>Best Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Closed-cell foam</strong></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 100%;"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Plastic 210L drum</strong></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 100%;"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. PVC pipe (2")</strong></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 100%;"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. Wood (specify type)</strong></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 100%;"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>5. Styrofoam/EPS</strong></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 100%;"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>6. Your choice</strong></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 80%;"></td>
+                        <td><input type="text" style="width: 100%;"></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p style="margin-top: 20px;"><strong>Research Questions:</strong></p>
+            <p><strong>Where in your area can you source these materials?</strong></p>
+            <div class="answer-space medium"></div>
+            
+            <p style="margin-top: 20px;"><strong>Which materials are most affordable?</strong></p>
+            <div class="answer-space medium"></div>
+        </div>
+        
+        <!-- SECTION 2: PHYSICS REFLECTION -->
+        <div class="section">
+            <h2>
+                <span>Section 2: Physics Reflection</span>
+                <span class="points">30 pts</span>
+            </h2>
+            
+            <div class="rubric">
+                <strong>Grading Rubric:</strong>
+                Answers demonstrate understanding (8 pts each) • Calculations correct with proper units (6 pts bonus if included)
+            </div>
+            
+            <p style="margin-bottom: 20px;"><strong>Instructions:</strong> Answer the following questions in complete sentences. Use concepts from the class to explain your thinking.</p>
+            
+            <!-- Question 1 -->
+            <div class="question-block">
+                <strong>Question 1 (8 pts)</strong><br>
+                A sealed plastic drum weighs 15 kg and has a volume of 210 liters. Will it float in freshwater? Show your calculation and explain using Archimedes' Principle.
+            </div>
+            <div class="answer-space medium"></div>
+            
+            <!-- Question 2 -->
+            <div class="question-block">
+                <strong>Question 2 (8 pts)</strong><br>
+                You have two design options for your raft: Option A: Wide and flat (more stable, more drag) vs. Option B: Narrow and streamlined (less stable, less drag). Which would you choose for a calm lake? Which for a river with currents? Explain your reasoning.
+            </div>
+            <div class="answer-space tall"></div>
+            
+            <!-- Question 3 -->
+            <div class="question-block">
+                <strong>Question 3 (8 pts)</strong><br>
+                What is a safety factor and why do engineers use them? Give an example from the raft design.
+            </div>
+            <div class="answer-space medium"></div>
+            
+            <!-- Question 4 -->
+            <div class="question-block">
+                <strong>Question 4 (6 pts)</strong><br>
+                If you add weight to a floating raft, what happens to the depth at which it sits in the water (called draft)? Why?
+            </div>
+            <div class="answer-space medium"></div>
+            
+            <!-- Question 5 -->
+            <div class="question-block">
+                <strong>Question 5 (8 pts)</strong><br>
+                A raft you designed can support 200 kg (before applying safety factors). After applying a 1.5× safety factor, how much weight can it actually carry safely? Show your calculation.
+            </div>
+            <div class="answer-space medium"></div>
+        </div>
+        
+        <!-- SECTION 3: CALCULATION PRACTICE -->
+        <div class="section">
+            <h2>
+                <span>Section 3: Calculation Practice</span>
+                <span class="points">35 pts</span>
+            </h2>
+            
+            <div class="rubric">
+                <strong>Grading Rubric:</strong>
+                Setup & approach (5 pts/problem) • Calculations accurate (10 pts/problem) • Final answer with units (2 pts/problem)
+            </div>
+            
+            <!-- PROBLEM 1 -->
+            <div class="problem">
+                <h4>PROBLEM 1: Rectangular Foam Block (17 points)</h4>
+                <p><strong>Scenario:</strong> You have a closed-cell foam block with dimensions:</p>
+                <ul style="margin: 10px 0 20px 20px;">
+                    <li>Length: 2 meters</li>
+                    <li>Width: 0.8 meters</li>
+                    <li>Height: 0.4 meters</li>
+                    <li>Foam density: 0.032 kg per liter</li>
+                </ul>
+                
+                <div class="problem-step">
+                    <strong>a) Volume of the foam block in liters (show m³ to L conversion)</strong>
+                    <div class="answer-space short"></div>
+                    <p style="margin-top: 10px;">Answer: _____________ liters</p>
+                </div>
+                
+                <div class="problem-step">
+                    <strong>b) Total weight of the foam block</strong>
+                    <div class="answer-space short"></div>
+                    <p style="margin-top: 10px;">Answer: _____________ kg</p>
+                </div>
+                
+                <div class="problem-step">
+                    <strong>c) Buoyant force this block can generate</strong>
+                    <p style="font-size: 0.9em; margin: 10px 0;">(Remember: 1 liter water = 1 kg buoyancy)</p>
+                    <div class="answer-space short"></div>
+                    <p style="margin-top: 10px;">Answer: _____________ kg</p>
+                </div>
+                
+                <div class="problem-step">
+                    <strong>d) Net buoyancy (buoyant force − weight of block)</strong>
+                    <div class="answer-space short"></div>
+                    <p style="margin-top: 10px;">Answer: _____________ kg</p>
+                </div>
+                
+                <div class="problem-step">
+                    <strong>e) Safe working load (apply 1.5× safety factor)</strong>
+                    <div class="answer-space short"></div>
+                    <p style="margin-top: 10px;">Answer: _____________ kg</p>
+                </div>
+            </div>
+            
+            <!-- PROBLEM 2 -->
+            <div class="problem">
+                <h4>PROBLEM 2: Cylindrical PVC Pipe (18 points)</h4>
+                <p><strong>Scenario:</strong> You're using PVC pipes for buoyancy. Each pipe has:</p>
+                <ul style="margin: 10px 0 20px 20px;">
+                    <li>Outer diameter: 4 inches (0.1016 m)</li>
+                    <li>Length: 3 meters</li>
+                    <li>PVC density: 1.4 kg/L (solid material)</li>
+                    <li>Inside diameter: 3.5 inches (0.0889 m)</li>
+                </ul>
+                
+                <div class="problem-step">
+                    <strong>a) Volume of one hollow PVC pipe</strong>
+                    <p style="font-size: 0.9em; margin: 10px 0;">(Hint: V = π × r² × h for both outer and inner, then subtract)</p>
+                    <div class="answer-space medium"></div>
+                    <p style="margin-top: 10px;">Answer: _____________ liters</p>
+                </div>
+                
+                <div class="problem-step">
+                    <strong>b) Weight of one PVC pipe</strong>
+                    <div class="answer-space short"></div>
+                    <p style="margin-top: 10px;">Answer: _____________ kg</p>
+                </div>
+                
+                <div class="problem-step">
+                    <strong>c) If you use 6 pipes bundled together, total weight and buoyancy</strong>
+                    <div class="answer-space medium"></div>
+                    <p style="margin-top: 10px;">Total weight: _____________ kg<br>Total buoyancy: _____________ kg</p>
+                </div>
+                
+                <div class="problem-step">
+                    <strong>d) Safe working load with 1.5× safety factor</strong>
+                    <div class="answer-space short"></div>
+                    <p style="margin-top: 10px;">Answer: _____________ kg</p>
+                </div>
+                
+                <div class="problem-step">
+                    <strong>e) How many teenagers (avg. 70 kg) can safely ride on 6 PVC pipes?</strong>
+                    <div class="answer-space short"></div>
+                    <p style="margin-top: 10px;">Answer: _____________ teenagers</p>
+                </div>
+            </div>
+            
+            <!-- PROBLEM 3 -->
+            <div class="problem">
+                <h4>PROBLEM 3: Multi-Material Raft Design (15 points)</h4>
+                <p><strong>Scenario:</strong> Your raft design combines multiple materials:</p>
+                <ul style="margin: 10px 0 20px 20px;">
+                    <li>8 foam blocks (each 1m × 0.5m × 0.3m, density 0.03 kg/L)</li>
+                    <li>2 PVC bundles (6 pipes each, from Problem 2)</li>
+                    <li>Wooden frame (total weight: 25 kg)</li>
+                    <li>Rope and fasteners (total weight: 12 kg)</li>
+                </ul>
+                
+                <div class="problem-step">
+                    <strong>a) Total volume of foam blocks</strong>
+                    <div class="answer-space short"></div>
+                    <p style="margin-top: 10px;">Answer: _____________ liters</p>
+                </div>
+                
+                <div class="problem-step">
+                    <strong>b) Total weight of all materials</strong>
+                    <div class="answer-space short"></div>
+                    <p style="margin-top: 10px;">Answer: _____________ kg</p>
+                </div>
+                
+                <div class="problem-step">
+                    <strong>c) Total buoyant force from foam + PVC</strong>
+                    <div class="answer-space short"></div>
+                    <p style="margin-top: 10px;">Answer: _____________ kg</p>
+                </div>
+                
+                <div class="problem-step">
+                    <strong>d) Net buoyancy (total buoyant force − total weight)</strong>
+                    <div class="answer-space short"></div>
+                    <p style="margin-top: 10px;">Answer: _____________ kg</p>
+                </div>
+                
+                <div class="problem-step">
+                    <strong>e) Safe working load with 1.5× safety factor</strong>
+                    <div class="answer-space short"></div>
+                    <p style="margin-top: 10px;">Answer: _____________ kg</p>
+                </div>
+                
+                <div class="problem-step">
+                    <strong>f) Can this design safely carry 4 teenagers (~320 kg total)?</strong>
+                    <div class="answer-space medium"></div>
+                    <p style="margin-top: 10px;">Yes/No: _____________ Explanation: _________________________________</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- BONUS CHALLENGE -->
+        <div class="bonus-box">
+            <h3>🌟 BONUS CHALLENGE (10 bonus points)</h3>
+            <p><strong>Design your own single-material raft that can safely carry 4 teenagers (320 kg). Budget: R5,000 ZAR</strong></p>
+            
+            <p style="margin-top: 20px;"><strong>What material would you choose?</strong></p>
+            <div class="answer-space short"></div>
+            
+            <p style="margin-top: 20px;"><strong>Calculate the volume needed:</strong></p>
+            <div class="answer-space medium"></div>
+            
+            <p style="margin-top: 20px;"><strong>Estimate the cost:</strong></p>
+            <div class="answer-space short"></div>
+            
+            <p style="margin-top: 20px;"><strong>Sketch your design below:</strong></p>
+            <div class="answer-space" style="min-height: 180px;"></div>
+        </div>
+        
+        <!-- COMPLETION CHECKLIST -->
+        <div class="checklist">
+            <h3>✓ Completion Checklist</h3>
+            <div class="checklist-item">
+                <input type="checkbox"> Completed all 6 materials research
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox"> Answered all 5 reflection questions
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox"> Solved all 3 calculation problems (+ bonus)
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox"> Showed all work and units
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox"> Used pen or dark pencil (legible)
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox"> Wrote name and date
+            </div>
+        </div>
+        
+        <!-- FEEDBACK SECTION -->
+        <div class="feedback-section">
+            <p style="margin-bottom: 15px;"><strong>Teacher Feedback Section</strong></p>
+            <p><strong>Score:</strong> _____ / 100 (+ _____ bonus)</p>
+            <p style="margin-top: 15px;"><strong>Feedback:</strong></p>
+            <div class="answer-space medium"></div>
+        </div>
+        
+        <!-- FOOTER NOTE -->
+        <div class="footer-note">
+            <strong>🎯 Next Week Preview</strong>
+            <p>Great work! Week 2 we'll build your raft designs and test them. Bring your homework to discuss your design choices and calculations.</p>
+        </div>
+    </div>
+    <style>
+        .digital-note {
+            background: #eef4f2;
+            border: 2px solid var(--acqua, #628981);
+            color: #2c3e50;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        .digital-note strong { color: var(--terracotta, #963417); }
+        .answer-input {
+            display: block;
+            width: 100%;
+            height: 100%;
+            min-height: inherit;
+            border: none;
+            background: transparent;
+            font: inherit;
+            color: inherit;
+            resize: vertical;
+            outline: none;
+        }
+        .answer-input:focus {
+            outline: 2px solid rgba(0,0,0,0.2);
+            outline-offset: 2px;
+            border-radius: 3px;
+        }
+        .submit-bar {
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 3px solid var(--terracotta, #963417);
+            text-align: center;
+        }
+        #submit-btn {
+            background: var(--terracotta, #963417);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 1.05em;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        #submit-btn:hover { background: #7a2812; }
+        #submit-status {
+            margin-top: 12px;
+            font-size: 0.9em;
+            color: #2c3e50;
+        }
+        @media print {
+            .digital-note, .submit-bar { display: none; }
+        }
+    </style>
+    <script>
+    (function () {
+        var PAGE_KEY = 'raft_homework_' + document.title.replace(/\s+/g, '_');
+        var container = document.querySelector('.container');
+        if (!container) return;
+
+        // Digital-fill instructions banner
+        var note = document.createElement('div');
+        note.className = 'digital-note';
+        note.innerHTML = '<strong>Digital version:</strong> Type your answers directly into the boxes below. ' +
+            'Your work is autosaved in this browser as you go. When finished, click <strong>Download &amp; Submit My Answers</strong> ' +
+            'at the bottom of the page and send the downloaded file to your instructor.';
+        var header = container.querySelector('.header');
+        if (header && header.nextSibling) {
+            container.insertBefore(note, header.nextSibling);
+        } else {
+            container.insertBefore(note, container.firstChild);
+        }
+
+        // Turn each answer-space div into an editable textarea, preserving its box styling
+        document.querySelectorAll('.answer-space').forEach(function (div) {
+            if (div.querySelector('textarea')) return;
+            var ta = document.createElement('textarea');
+            ta.className = 'answer-input';
+            div.appendChild(ta);
+        });
+
+        var fields = Array.prototype.slice.call(
+            document.querySelectorAll('input[type="text"], textarea, input[type="checkbox"]')
+        );
+        fields.forEach(function (el, i) { el.dataset.fieldId = 'f' + i; });
+
+        function nearestLabel(el) {
+            var td = el.closest('td');
+            if (td) {
+                var tr = td.closest('tr');
+                var table = td.closest('table');
+                var cellIndex = Array.prototype.indexOf.call(tr.children, td);
+                var rowLabel = tr.children[0] ? tr.children[0].innerText.trim() : '';
+                var colLabel = '';
+                var thead = table.querySelector('thead');
+                if (thead) {
+                    var ths = thead.querySelectorAll('th');
+                    if (ths[cellIndex]) colLabel = ths[cellIndex].innerText.trim();
+                } else {
+                    var headerRow = table.querySelector('tr');
+                    if (headerRow) {
+                        var hcells = headerRow.querySelectorAll('th');
+                        if (hcells[cellIndex]) colLabel = hcells[cellIndex].innerText.trim();
+                    }
+                }
+                return [rowLabel, colLabel].filter(Boolean).join(' — ');
+            }
+            var node = el;
+            while (node) {
+                var sib = node.previousElementSibling;
+                while (sib) {
+                    var text = sib.innerText && sib.innerText.trim();
+                    if (text && text.length > 1 && !sib.querySelector('input,textarea')) {
+                        return text.slice(0, 180);
+                    }
+                    sib = sib.previousElementSibling;
+                }
+                node = node.parentElement;
+                if (!node || node.tagName === 'BODY') break;
+            }
+            return el.getAttribute('placeholder') || ('Field ' + el.dataset.fieldId);
+        }
+
+        function saveAll() {
+            var data = {};
+            fields.forEach(function (el) {
+                data[el.dataset.fieldId] = el.type === 'checkbox' ? el.checked : el.value;
+            });
+            try { localStorage.setItem(PAGE_KEY, JSON.stringify(data)); } catch (e) {}
+        }
+
+        function restoreAll() {
+            var raw;
+            try { raw = localStorage.getItem(PAGE_KEY); } catch (e) { return; }
+            if (!raw) return;
+            var data = JSON.parse(raw);
+            fields.forEach(function (el) {
+                if (!(el.dataset.fieldId in data)) return;
+                if (el.type === 'checkbox') el.checked = data[el.dataset.fieldId];
+                else el.value = data[el.dataset.fieldId];
+            });
+        }
+
+        restoreAll();
+        fields.forEach(function (el) {
+            el.addEventListener('input', saveAll);
+            el.addEventListener('change', saveAll);
+        });
+
+        function buildReport() {
+            var lines = [];
+            lines.push(document.title);
+            lines.push('Downloaded: ' + new Date().toLocaleString());
+            lines.push('='.repeat(60));
+            fields.forEach(function (el) {
+                var label = nearestLabel(el);
+                var value = el.type === 'checkbox'
+                    ? (el.checked ? '[x]' : '[ ]')
+                    : (el.value.trim() || '(blank)');
+                lines.push('');
+                lines.push('Q: ' + label);
+                lines.push('A: ' + value);
+            });
+            return lines.join('\n');
+        }
+
+        function download() {
+            saveAll();
+            var nameField = document.querySelector('.header input[type="text"]');
+            var studentName = (nameField && nameField.value.trim()) || 'student';
+            var safeName = studentName.replace(/[^a-z0-9]+/gi, '_');
+            var slug = document.title.replace(/[^a-z0-9]+/gi, '_');
+            var filename = safeName + '_' + slug + '.txt';
+            var blob = new Blob([buildReport()], { type: 'text/plain' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            var status = document.getElementById('submit-status');
+            if (status) status.textContent = 'Downloaded "' + filename + '" — email it to your instructor to submit.';
+        }
+
+        var bar = document.createElement('div');
+        bar.className = 'submit-bar';
+        bar.innerHTML = '<button type="button" id="submit-btn">📥 Download &amp; Submit My Answers</button>' +
+            '<div id="submit-status"></div>';
+        container.appendChild(bar);
+        document.getElementById('submit-btn').addEventListener('click', download);
+    })();
+    </script>
+</body>
+</html>

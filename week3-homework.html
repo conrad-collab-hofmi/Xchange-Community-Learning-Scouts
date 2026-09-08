@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 3 Homework - Raft Building Final Assessment</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 30px 20px;
+            color: #2c3e50;
+        }
+        .container { max-width: 850px; margin: 0 auto; background: white; padding: 40px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); border-radius: 8px; }
+        :root { --terracotta: #963417; --pina: #2D5016; --acqua: #628981; --solace: #CF893A; }
+        .header {
+            background: linear-gradient(135deg, var(--terracotta) 0%, #7a2812 100%);
+            color: white;
+            padding: 25px;
+            margin: -40px -40px 30px -40px;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 { font-size: 1.9em; margin-bottom: 10px; }
+        .info-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 12px; font-size: 0.9em; }
+        .instructions-box { background: var(--solace); color: white; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid var(--terracotta); }
+        .section { margin: 30px 0; }
+        .section h2 { color: var(--terracotta); font-size: 1.5em; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 3px solid var(--solace); display: flex; align-items: center; }
+        .points { display: inline-block; background: var(--acqua); color: white; padding: 4px 10px; border-radius: 15px; font-size: 0.75em; margin-left: auto; }
+        .rubric { background: var(--acqua); color: white; padding: 12px; border-radius: 6px; margin: 12px 0; font-size: 0.85em; }
+        .question-block { background: var(--solace); color: white; padding: 15px; margin: 15px 0; border-radius: 6px; border-left: 4px solid var(--terracotta); font-size: 0.9em; }
+        .answer-space { border: 2px dashed var(--terracotta); min-height: 70px; padding: 12px; margin: 12px 0; background: #fafafa; border-radius: 4px; }
+        .answer-space.short { min-height: 45px; }
+        .answer-space.medium { min-height: 90px; }
+        .answer-space.tall { min-height: 130px; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.85em; }
+        table th { background: var(--terracotta); color: white; padding: 10px; text-align: left; }
+        table td { border: 1px solid #ddd; padding: 10px; background: white; }
+        table tr:nth-child(even) td { background: #f9f9f9; }
+        .input-field { border: none; border-bottom: 2px solid var(--terracotta); padding: 4px; font-size: 0.9em; width: 100%; }
+        .challenge-box { background: linear-gradient(135deg, var(--terracotta) 0%, #7a2812 100%); color: white; padding: 18px; border-radius: 6px; margin: 15px 0; }
+        .challenge-box h3 { margin-bottom: 10px; }
+        .challenge-box ul { margin-left: 20px; }
+        .challenge-box li { margin-bottom: 8px; font-size: 0.9em; }
+        .success-box { background: linear-gradient(135deg, var(--pina) 0%, #3d621a 100%); color: white; padding: 18px; border-radius: 6px; margin: 15px 0; }
+        .feedback-section { background: #f0f0f0; padding: 15px; border-radius: 6px; margin-top: 30px; font-size: 0.9em; }
+        .footer-note { background: var(--solace); color: white; padding: 15px; border-radius: 6px; margin-top: 30px; text-align: center; font-size: 0.9em; }
+        @media print { body { background: white; padding: 0; } .container { box-shadow: none; max-width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>WEEK 3 ASSESSMENT</h1>
+            <p style="font-size: 1em; margin-bottom: 15px;">Raft Building - Testing, Data Analysis & Reflection</p>
+            <div class="info-row">
+                <div><strong>Name:</strong> <input type="text" class="input-field" style="border: none; border-bottom: 2px solid white; margin-top: 4px;"></div>
+                <div><strong>Date:</strong> <input type="text" class="input-field" style="border: none; border-bottom: 2px solid white; margin-top: 4px;"></div>
+                <div><strong>Score:</strong> <span>_____ / 100</span></div>
+            </div>
+        </div>
+        
+        <div class="instructions-box">
+            <p><strong>📝 Final Assessment:</strong> Complete all sections using data from Week 3 testing. Show all calculations. This is a comprehensive evaluation of your understanding and work throughout the three-week course.</p>
+        </div>
+        
+        <!-- SECTION 1 -->
+        <div class="section">
+            <h2>Section 1: Test Data & Results <span class="points">20 pts</span></h2>
+            <div class="rubric">Record actual measurements from all three testing phases</div>
+            
+            <p style="margin: 12px 0; font-size: 0.9em;"><strong>Complete testing data table:</strong></p>
+            
+            <table style="font-size: 0.8em;">
+                <thead>
+                    <tr>
+                        <th>Phase</th>
+                        <th>Load (kg)</th>
+                        <th>Front Draft (cm)</th>
+                        <th>Center Draft (cm)</th>
+                        <th>Rear Draft (cm)</th>
+                        <th>Tilting?</th>
+                        <th>Water Entry?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Unloaded</td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                    </tr>
+                    <tr style="background: #f9f9f9;">
+                        <td>25% Load (1 person)</td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                    </tr>
+                    <tr>
+                        <td>50% Load (2 people)</td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                    </tr>
+                    <tr style="background: #f9f9f9;">
+                        <td>75% Load (3 people)</td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                    </tr>
+                    <tr>
+                        <td>100% Load (4 people)</td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                        <td><input type="text" style="width: 90%;"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- SECTION 2 -->
+        <div class="section">
+            <h2>Section 2: Data Analysis <span class="points">25 pts</span></h2>
+            <div class="rubric">Perform calculations comparing predictions to actual results</div>
+            
+            <p style="margin: 12px 0; font-size: 0.9em;"><strong>Calculate Actual Safety Factor Achieved:</strong></p>
+            
+            <div class="question-block">
+                <strong>What was the maximum load the raft successfully held?</strong> _____________ kg
+            </div>
+            
+            <div class="question-block">
+                <strong>At what load level did problems occur (water entry, tilting, etc.)?</strong> _____________ kg
+            </div>
+            
+            <div class="question-block">
+                <strong>What was your raft's total weight (from Week 2)?</strong> _____________ kg
+            </div>
+            
+            <p style="margin: 15px 0; font-size: 0.9em;"><strong>Calculation:</strong> Actual Safety Factor = Maximum Load ÷ Raft Weight</p>
+            <div class="answer-space short"></div>
+            <p style="font-size: 0.85em; margin-top: 8px;"><strong>Your Actual Safety Factor:</strong> _____________ ×</p>
+            
+            <p style="margin: 15px 0; font-size: 0.9em;"><strong>Compare to Prediction:</strong> You predicted 1.5× safety factor in Week 2</p>
+            
+            <table style="margin: 12px 0;">
+                <tr>
+                    <th style="background: var(--acqua); color: white; padding: 8px;">Prediction (1.5×)</th>
+                    <th style="background: var(--acqua); color: white; padding: 8px;">Actual Result</th>
+                    <th style="background: var(--acqua); color: white; padding: 8px;">Difference</th>
+                    <th style="background: var(--acqua); color: white; padding: 8px;">% Error</th>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">_______</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">_______</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">_______</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">_______%</td>
+                </tr>
+            </table>
+            
+            <p style="margin: 15px 0; font-size: 0.85em;"><strong>Formula for % Error:</strong> |Predicted − Actual| ÷ Actual × 100</p>
+        </div>
+        
+        <!-- SECTION 3 -->
+        <div class="section">
+            <h2>Section 3: Error Analysis <span class="points">25 pts</span></h2>
+            <div class="rubric">Identify and explain sources of error between predictions and results</div>
+            
+            <p style="margin: 12px 0; font-size: 0.9em;"><strong>Analyze what caused the difference between your Week 2 predictions and actual Week 3 results:</strong></p>
+            
+            <div class="challenge-box">
+                <strong>Top 3 Factors Contributing to Error:</strong>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Factor: _________________ | Impact: ____________________________</li>
+                    <li>Factor: _________________ | Impact: ____________________________</li>
+                    <li>Factor: _________________ | Impact: ____________________________</li>
+                </ol>
+            </div>
+            
+            <div class="question-block">
+                <strong>Materials:</strong> Did actual material densities differ from predictions? Explain.
+            </div>
+            <div class="answer-space short"></div>
+            
+            <div class="question-block">
+                <strong>Construction:</strong> Was the raft built exactly as designed, or were modifications made? What were they?
+            </div>
+            <div class="answer-space short"></div>
+            
+            <div class="question-block">
+                <strong>Unexpected Factors:</strong> Were there any surprises during testing (water absorption, fastener failures, etc.)?
+            </div>
+            <div class="answer-space short"></div>
+        </div>
+        
+        <!-- SECTION 4 -->
+        <div class="section">
+            <h2>Section 4: Reflection & Learning <span class="points">20 pts</span></h2>
+            <div class="rubric">Demonstrate understanding of physics concepts and design process</div>
+            
+            <p style="margin: 12px 0; font-size: 0.9em;"><strong>Answer in complete sentences; demonstrate deep understanding:</strong></p>
+            
+            <div class="question-block">
+                <strong>1) Explain how Archimedes' Principle determined your raft's floating depth. (5 pts)</strong>
+            </div>
+            <div class="answer-space medium"></div>
+            
+            <div class="question-block">
+                <strong>2) How did your understanding of buoyancy change from Week 1 to Week 3? (5 pts)</strong>
+            </div>
+            <div class="answer-space medium"></div>
+            
+            <div class="question-block">
+                <strong>3) If you could redesign the raft, what would you change and why? (5 pts)</strong>
+            </div>
+            <div class="answer-space medium"></div>
+            
+            <div class="question-block">
+                <strong>4) What was the most important lesson you learned about engineering? (5 pts)</strong>
+            </div>
+            <div class="answer-space medium"></div>
+        </div>
+        
+        <!-- SECTION 5 -->
+        <div class="section">
+            <h2>Section 5: Stability Analysis <span class="points">10 pts</span></h2>
+            <div class="rubric">Rate and explain raft stability based on test observations</div>
+            
+            <p style="margin: 12px 0; font-size: 0.9em;"><strong>Rate your raft's stability on a scale of 1-5 at full load (100% capacity):</strong></p>
+            
+            <div class="question-block">
+                <strong>Stability Rating: _____ / 5</strong>
+                <p style="margin-top: 8px; font-size: 0.85em;">(1=Very Unstable, 5=Very Stable)</p>
+            </div>
+            
+            <p style="margin: 12px 0; font-size: 0.9em;"><strong>Explain your rating based on test observations:</strong></p>
+            <div class="answer-space medium"></div>
+            
+            <p style="margin: 12px 0; font-size: 0.9em;"><strong>What design features contributed most to stability (or instability)?</strong></p>
+            <div class="answer-space short"></div>
+        </div>
+        
+        <!-- BONUS -->
+        <div class="success-box">
+            <h3>🌟 BONUS: Real-World Application (5 bonus points)</h3>
+            <p>Where else in the real world are buoyancy and safety factors important? Describe an example.</p>
+            <div class="answer-space medium"></div>
+        </div>
+        
+        <!-- COMPLETION CHECKLIST -->
+        <div style="background: var(--pina); color: white; padding: 15px; border-radius: 6px; margin: 20px 0;">
+            <h3 style="margin-bottom: 10px;">✓ Completion Checklist</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9em;">
+                <div>
+                    <input type="checkbox" style="margin-right: 8px;"> Section 1: Test Data Complete
+                </div>
+                <div>
+                    <input type="checkbox" style="margin-right: 8px;"> Section 2: Calculations Done
+                </div>
+                <div>
+                    <input type="checkbox" style="margin-right: 8px;"> Section 3: Error Analysis Complete
+                </div>
+                <div>
+                    <input type="checkbox" style="margin-right: 8px;"> Section 4: Reflection Written
+                </div>
+                <div>
+                    <input type="checkbox" style="margin-right: 8px;"> Section 5: Stability Rated
+                </div>
+                <div>
+                    <input type="checkbox" style="margin-right: 8px;"> Bonus: Real-World Example Done
+                </div>
+            </div>
+        </div>
+        
+        <div class="feedback-section">
+            <p><strong>Teacher Assessment & Feedback</strong></p>
+            <p style="margin-top: 10px;">Score: _____ / 100 (+ _____ bonus)</p>
+            <p style="margin-top: 10px;">Course Overall: Excellent / Good / Satisfactory / Needs Improvement</p>
+            <p style="margin-top: 10px;">Feedback:</p>
+            <div class="answer-space medium"></div>
+        </div>
+        
+        <div class="footer-note">
+            <strong>🏆 Congratulations on completing the Raft Building Course!</strong><br>
+            You've demonstrated skills in physics, mathematics, engineering, teamwork, and problem-solving.<br>
+            <strong>Certificate of Completion Awarded</strong>
+        </div>
+    </div>
+    <style>
+        .digital-note {
+            background: #eef4f2;
+            border: 2px solid var(--acqua, #628981);
+            color: #2c3e50;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        .digital-note strong { color: var(--terracotta, #963417); }
+        .answer-input {
+            display: block;
+            width: 100%;
+            height: 100%;
+            min-height: inherit;
+            border: none;
+            background: transparent;
+            font: inherit;
+            color: inherit;
+            resize: vertical;
+            outline: none;
+        }
+        .answer-input:focus {
+            outline: 2px solid rgba(0,0,0,0.2);
+            outline-offset: 2px;
+            border-radius: 3px;
+        }
+        .submit-bar {
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 3px solid var(--terracotta, #963417);
+            text-align: center;
+        }
+        #submit-btn {
+            background: var(--terracotta, #963417);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 1.05em;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        #submit-btn:hover { background: #7a2812; }
+        #submit-status {
+            margin-top: 12px;
+            font-size: 0.9em;
+            color: #2c3e50;
+        }
+        @media print {
+            .digital-note, .submit-bar { display: none; }
+        }
+    </style>
+    <script>
+    (function () {
+        var PAGE_KEY = 'raft_homework_' + document.title.replace(/\s+/g, '_');
+        var container = document.querySelector('.container');
+        if (!container) return;
+
+        // Digital-fill instructions banner
+        var note = document.createElement('div');
+        note.className = 'digital-note';
+        note.innerHTML = '<strong>Digital version:</strong> Type your answers directly into the boxes below. ' +
+            'Your work is autosaved in this browser as you go. When finished, click <strong>Download &amp; Submit My Answers</strong> ' +
+            'at the bottom of the page and send the downloaded file to your instructor.';
+        var header = container.querySelector('.header');
+        if (header && header.nextSibling) {
+            container.insertBefore(note, header.nextSibling);
+        } else {
+            container.insertBefore(note, container.firstChild);
+        }
+
+        // Turn each answer-space div into an editable textarea, preserving its box styling
+        document.querySelectorAll('.answer-space').forEach(function (div) {
+            if (div.querySelector('textarea')) return;
+            var ta = document.createElement('textarea');
+            ta.className = 'answer-input';
+            div.appendChild(ta);
+        });
+
+        var fields = Array.prototype.slice.call(
+            document.querySelectorAll('input[type="text"], textarea, input[type="checkbox"]')
+        );
+        fields.forEach(function (el, i) { el.dataset.fieldId = 'f' + i; });
+
+        function nearestLabel(el) {
+            var td = el.closest('td');
+            if (td) {
+                var tr = td.closest('tr');
+                var table = td.closest('table');
+                var cellIndex = Array.prototype.indexOf.call(tr.children, td);
+                var rowLabel = tr.children[0] ? tr.children[0].innerText.trim() : '';
+                var colLabel = '';
+                var thead = table.querySelector('thead');
+                if (thead) {
+                    var ths = thead.querySelectorAll('th');
+                    if (ths[cellIndex]) colLabel = ths[cellIndex].innerText.trim();
+                } else {
+                    var headerRow = table.querySelector('tr');
+                    if (headerRow) {
+                        var hcells = headerRow.querySelectorAll('th');
+                        if (hcells[cellIndex]) colLabel = hcells[cellIndex].innerText.trim();
+                    }
+                }
+                return [rowLabel, colLabel].filter(Boolean).join(' — ');
+            }
+            var node = el;
+            while (node) {
+                var sib = node.previousElementSibling;
+                while (sib) {
+                    var text = sib.innerText && sib.innerText.trim();
+                    if (text && text.length > 1 && !sib.querySelector('input,textarea')) {
+                        return text.slice(0, 180);
+                    }
+                    sib = sib.previousElementSibling;
+                }
+                node = node.parentElement;
+                if (!node || node.tagName === 'BODY') break;
+            }
+            return el.getAttribute('placeholder') || ('Field ' + el.dataset.fieldId);
+        }
+
+        function saveAll() {
+            var data = {};
+            fields.forEach(function (el) {
+                data[el.dataset.fieldId] = el.type === 'checkbox' ? el.checked : el.value;
+            });
+            try { localStorage.setItem(PAGE_KEY, JSON.stringify(data)); } catch (e) {}
+        }
+
+        function restoreAll() {
+            var raw;
+            try { raw = localStorage.getItem(PAGE_KEY); } catch (e) { return; }
+            if (!raw) return;
+            var data = JSON.parse(raw);
+            fields.forEach(function (el) {
+                if (!(el.dataset.fieldId in data)) return;
+                if (el.type === 'checkbox') el.checked = data[el.dataset.fieldId];
+                else el.value = data[el.dataset.fieldId];
+            });
+        }
+
+        restoreAll();
+        fields.forEach(function (el) {
+            el.addEventListener('input', saveAll);
+            el.addEventListener('change', saveAll);
+        });
+
+        function buildReport() {
+            var lines = [];
+            lines.push(document.title);
+            lines.push('Downloaded: ' + new Date().toLocaleString());
+            lines.push('='.repeat(60));
+            fields.forEach(function (el) {
+                var label = nearestLabel(el);
+                var value = el.type === 'checkbox'
+                    ? (el.checked ? '[x]' : '[ ]')
+                    : (el.value.trim() || '(blank)');
+                lines.push('');
+                lines.push('Q: ' + label);
+                lines.push('A: ' + value);
+            });
+            return lines.join('\n');
+        }
+
+        function download() {
+            saveAll();
+            var nameField = document.querySelector('.header input[type="text"]');
+            var studentName = (nameField && nameField.value.trim()) || 'student';
+            var safeName = studentName.replace(/[^a-z0-9]+/gi, '_');
+            var slug = document.title.replace(/[^a-z0-9]+/gi, '_');
+            var filename = safeName + '_' + slug + '.txt';
+            var blob = new Blob([buildReport()], { type: 'text/plain' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            var status = document.getElementById('submit-status');
+            if (status) status.textContent = 'Downloaded "' + filename + '" — email it to your instructor to submit.';
+        }
+
+        var bar = document.createElement('div');
+        bar.className = 'submit-bar';
+        bar.innerHTML = '<button type="button" id="submit-btn">📥 Download &amp; Submit My Answers</button>' +
+            '<div id="submit-status"></div>';
+        container.appendChild(bar);
+        document.getElementById('submit-btn').addEventListener('click', download);
+    })();
+    </script>
+</body>
+</html>
