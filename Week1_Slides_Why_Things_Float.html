@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why Things Float</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+  <style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<style>
+:root{
+  --terracotta:#963417; --pina:#2D5016; --acqua:#628981; --solace:#CF893A;
+  --paper:#FAF7F2; --surface:#F2EDE5; --ink:#241E19; --muted:#6B6058;
+  --rule:#DED5C8;
+  --display:'Archivo',-apple-system,'Segoe UI',sans-serif;
+  --body:'Source Serif 4',Georgia,serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1A1613;color:var(--ink);font-family:var(--body);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:16px;gap:12px}
+
+.stage{width:100%;max-width:1180px}
+.deck{position:relative;width:100%;aspect-ratio:16/9;background:var(--paper);
+  container-type:size;container-name:slide;overflow:hidden;
+  box-shadow:0 18px 60px rgba(0,0,0,.55);border-radius:4px}
+
+.slide{position:absolute;inset:0;padding:5.2cqw 5.6cqw 7.4cqw;display:none;
+  flex-direction:column;background:var(--paper)}
+.slide.on{display:flex}
+
+/* ---- waterline footer ---- */
+.slide::after{content:"";position:absolute;left:5.6cqw;right:5.6cqw;bottom:4.4cqw;
+  height:2px;background:var(--acqua);opacity:.45}
+.tag{position:absolute;bottom:3.0cqw;left:5.6cqw;font-family:var(--mono);
+  font-size:1.08cqw;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.num{position:absolute;bottom:2.72cqw;right:5.6cqw;font-family:var(--mono);
+  font-size:1.5cqw;font-weight:600;color:var(--terracotta);
+  background:var(--paper);padding:0 .5cqw}
+
+/* ---- typography ---- */
+h1{font-family:var(--display);font-weight:700;font-size:3.5cqw;line-height:1.06;
+  color:var(--terracotta);text-wrap:balance;letter-spacing:-.015em}
+h1 .lead{display:block;font-family:var(--mono);font-size:1.12cqw;font-weight:600;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--acqua);margin-bottom:1.1cqw}
+h2{font-family:var(--display);font-weight:600;font-size:1.82cqw;color:var(--pina);
+  letter-spacing:-.005em}
+h3{font-family:var(--mono);font-weight:600;font-size:1.05cqw;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--acqua)}
+p,li{font-size:1.62cqw;line-height:1.5}
+.hero-rule{width:8cqw;height:4px;background:var(--solace);margin:1.5cqw 0 1.9cqw}
+.body-copy{max-width:62ch}
+strong{font-weight:600;color:var(--terracotta)}
+em{font-style:normal;font-family:var(--mono);font-size:.94em;color:var(--pina);font-weight:500}
+
+ul{list-style:none;display:flex;flex-direction:column;gap:1.0cqw}
+ul li{padding-left:2.4cqw;position:relative}
+ul li::before{content:"";position:absolute;left:.5cqw;top:.72em;width:.85cqw;height:.85cqw;
+  background:var(--solace);border-radius:50%}
+ol{padding-left:2.6cqw;display:flex;flex-direction:column;gap:.8cqw}
+ol li::marker{font-family:var(--mono);font-weight:600;color:var(--acqua);font-size:.9em}
+
+.flow{display:flex;flex-direction:column;gap:1.5cqw;flex:1;min-height:0}
+.cols{display:grid;gap:2.6cqw;align-items:start}
+.c2{grid-template-columns:1fr 1fr}
+.c58{grid-template-columns:1.25fr 1fr}
+.c85{grid-template-columns:1fr 1.45fr}
+
+/* ---- the formula block: the deck's hero element ---- */
+.calc{background:#E8EFED;border-left:5px solid var(--solace);padding:1.5cqw 1.9cqw;
+  font-family:var(--mono);font-size:1.42cqw;line-height:1.75;color:#1E3A34}
+.calc .lbl{display:block;font-size:.98cqw;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--acqua);margin-bottom:.7cqw;font-weight:600}
+.calc .res{color:var(--terracotta);font-weight:600}
+.calc .step{display:block}
+.calc .cmt{color:#7C8E89}
+
+.eq{font-family:var(--mono);font-size:2.15cqw;font-weight:500;color:var(--pina);
+  text-align:center;padding:1.7cqw 1cqw;background:var(--surface);
+  border-top:3px solid var(--acqua);border-bottom:3px solid var(--acqua)}
+.eq .v{color:var(--terracotta);font-weight:600}
+
+.rule-box{background:var(--pina);color:#F0EDE6;padding:1.8cqw 2.2cqw;display:flex;
+  flex-direction:column;gap:.7cqw}
+.rule-box .k{font-family:var(--mono);font-size:1.0cqw;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--solace);font-weight:600}
+.rule-box .t{font-family:var(--display);font-weight:700;font-size:2.3cqw;line-height:1.15}
+.rule-box p{font-size:1.4cqw;color:#CFC9BE;line-height:1.45}
+
+.note{background:var(--surface);border-left:4px solid var(--terracotta);
+  padding:1.2cqw 1.5cqw;font-size:1.4cqw;line-height:1.5}
+.note .k{font-family:var(--mono);font-size:.95cqw;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--terracotta);font-weight:600;display:block;margin-bottom:.4cqw}
+
+table{width:100%;border-collapse:collapse;font-size:1.3cqw}
+th{font-family:var(--mono);font-size:.95cqw;letter-spacing:.12em;text-transform:uppercase;
+  text-align:left;padding:.75cqw .9cqw;background:var(--terracotta);color:#FAF7F2;font-weight:600}
+td{padding:.68cqw .9cqw;border-bottom:1px solid var(--rule)}
+tbody tr:nth-child(even){background:var(--surface)}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+tr.hi td{background:#E8EFED;font-weight:600;color:var(--pina)}
+
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6cqw}
+.stat{border-top:3px solid var(--acqua);padding-top:1.0cqw}
+.stat .v{font-family:var(--mono);font-size:2.9cqw;font-weight:600;color:var(--terracotta);
+  line-height:1;font-variant-numeric:tabular-nums}
+.stat .l{font-size:1.18cqw;color:var(--muted);margin-top:.5cqw;line-height:1.35}
+
+svg{display:block;width:100%;height:auto}
+.cap{font-family:var(--mono);font-size:1.0cqw;color:var(--muted);text-align:center;
+  margin-top:.6cqw;letter-spacing:.04em}
+
+/* ---- title slide ---- */
+.title-slide{background:var(--pina);padding:0;justify-content:flex-end}
+.title-slide::after{display:none}
+.title-inner{padding:0 6cqw 9cqw;position:relative;z-index:2}
+.title-slide .eyebrow{font-family:var(--mono);font-size:1.25cqw;letter-spacing:.26em;
+  text-transform:uppercase;color:var(--solace);font-weight:600;margin-bottom:1.6cqw}
+.title-slide h1{color:#FBF8F3;font-size:6.6cqw;line-height:.94;letter-spacing:-.028em}
+.title-slide .sub{font-size:2.0cqw;color:#B9C4A8;margin-top:1.7cqw;max-width:44ch}
+.title-slide .meta{font-family:var(--mono);font-size:1.15cqw;color:#8FA07C;margin-top:2.6cqw;
+  letter-spacing:.1em;text-transform:uppercase;display:flex;gap:1.4cqw;flex-wrap:wrap}
+.title-slide .meta span::after{content:" ·";color:var(--solace)}
+.title-slide .meta span:last-child::after{content:""}
+.wave{position:absolute;left:0;right:0;bottom:0;height:26cqw;z-index:1;opacity:.9}
+
+/* ---- section divider ---- */
+.divider{background:var(--terracotta);justify-content:center;align-items:flex-start}
+.divider::after{background:var(--solace);opacity:.7}
+.divider h1{color:#FBF8F3;font-size:5.2cqw;max-width:20ch}
+.divider .eyebrow{font-family:var(--mono);font-size:1.15cqw;letter-spacing:.24em;
+  text-transform:uppercase;color:#F0C89A;font-weight:600;margin-bottom:1.4cqw}
+.divider .tag,.divider .num{color:#F0C89A;background:none}
+
+/* ---- facilitator notes ---- */
+.notes{display:none}
+body.notes-on .notes{display:block;position:absolute;left:0;right:0;bottom:0;
+  background:#241E19;color:#E8DFD2;padding:1.4cqw 5.6cqw;font-family:var(--mono);
+  font-size:1.12cqw;line-height:1.55;border-top:3px solid var(--solace);z-index:5}
+.notes b{color:var(--solace);font-weight:600}
+
+/* ---- controls ---- */
+.bar{width:100%;max-width:1180px;display:flex;align-items:center;gap:14px;
+  font-family:var(--mono);font-size:12px;color:#9C9084;flex-wrap:wrap}
+.bar button{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;background:#2E2823;color:#D8CCBC;border:1px solid #453C34;
+  padding:8px 14px;border-radius:3px;cursor:pointer;transition:background .15s}
+.bar button:hover{background:#3D342C;color:#FAF7F2}
+.bar button:focus-visible{outline:2px solid var(--solace);outline-offset:2px}
+.bar .count{margin-left:auto;color:#C9BCAC;font-variant-numeric:tabular-nums}
+.bar .hint{color:#6E6359}
+progress{-webkit-appearance:none;appearance:none;width:100%;height:3px;border:none;
+  background:#2E2823;display:block;max-width:1180px}
+progress::-webkit-progress-bar{background:#2E2823}
+progress::-webkit-progress-value{background:var(--solace)}
+progress::-moz-progress-bar{background:var(--solace)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+@media print{
+  body{background:#fff;padding:0;display:block}
+  .bar,progress{display:none}
+  .stage{max-width:none}
+  .deck{box-shadow:none;border-radius:0;aspect-ratio:auto}
+  .slide{display:flex!important;position:relative;inset:auto;width:100%;
+    height:100vh;page-break-after:always;break-after:page}
+  @page{size:landscape}
+}
+</style>
+
+<div class="stage">
+<div class="deck" id="deck">
+
+<!-- 1 TITLE -->
+<section class="slide title-slide on">
+  <svg class="wave" viewBox="0 0 1200 300" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,150 C150,105 300,195 450,150 C600,105 750,195 900,150 C1050,105 1150,180 1200,160 L1200,300 L0,300 Z" fill="#3D621A"/>
+    <path d="M0,195 C150,155 300,235 450,195 C600,155 750,235 900,195 C1050,155 1150,225 1200,205 L1200,300 L0,300 Z" fill="#628981" opacity=".55"/>
+  </svg>
+  <div class="title-inner">
+    <div class="eyebrow">Week 1 of 3 &nbsp;·&nbsp; Xchange Community Learning</div>
+    <h1>Why Things<br>Float</h1>
+    <p class="sub">The physics and mathematics you need before you build anything that has to carry a person.</p>
+    <div class="meta"><span>Heritage of Faith Ministries</span><span>Scouts Seniors 14–18</span><span>120 minutes</span></div>
+  </div>
+  <div class="notes"><b>Open:</b> Hold up a small steel bolt and a photo of a container ship. Ask which one floats and why. Don't answer — tell them they'll answer it themselves by slide 4. Keep this deck's pace: roughly 4 min per slide, with the three worked examples slower.</div>
+</section>
+
+<!-- 2 TODAY -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Session Plan</span>What you'll walk out knowing</h1>
+    <div class="cols c2" style="margin-top:.6cqw">
+      <div>
+        <h3>The physics</h3>
+        <ul style="margin-top:1.1cqw">
+          <li>Why anything floats — Archimedes' Principle</li>
+          <li>How density decides float or sink</li>
+          <li>How water resists you — drag</li>
+          <li>Why wide rafts stay upright</li>
+        </ul>
+      </div>
+      <div>
+        <h3>The mathematics</h3>
+        <ul style="margin-top:1.1cqw">
+          <li>Volume of the shapes you'll actually use</li>
+          <li>Turning volume into kilograms of lift</li>
+          <li>Subtracting your raft's own weight</li>
+          <li>Applying a safety factor like an engineer</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note" style="margin-top:auto">
+      <span class="k">By the end of today</span>
+      You will be able to look at a pile of drums, pipes and timber and calculate — before touching a tool — whether it will carry your patrol.
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">02</div>
+  <div class="notes"><b>2 min.</b> Don't dwell. The point is to set the promise: by the end they can predict, not guess.</div>
+</section>
+
+<!-- 3 HOOK -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">The Question</span>A steel bolt sinks. A steel ship doesn't.</h1>
+    <div class="cols c2" style="align-items:center;flex:1">
+      <div class="body-copy">
+        <p>A 5 gram steel bolt drops straight to the bottom.</p>
+        <p style="margin-top:1.2cqw">A container ship made of the same steel weighs <strong>200 000 tonnes</strong> and stays on the surface.</p>
+        <p style="margin-top:1.2cqw">Same material. Opposite result.</p>
+        <p style="margin-top:1.5cqw">So floating cannot be about <em>what a thing is made of</em>. It has to be about something else.</p>
+      </div>
+      <div class="rule-box">
+        <span class="k">Hold this thought</span>
+        <span class="t">It's not the material.<br>It's the shape.</span>
+        <p>A bolt is solid steel. A ship is mostly air, wrapped in a thin steel skin. The ship pushes far more water out of the way — and that is the whole secret.</p>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">03</div>
+  <div class="notes"><b>Discussion, 5 min.</b> Let them argue before revealing. Common wrong answers: "steel ships are hollow so they're lighter" (no — the ship is far heavier than the bolt). Push them toward <b>how much water is shoved aside</b>.</div>
+</section>
+
+<!-- 4 ARCHIMEDES -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">The Core Principle</span>Archimedes' Principle</h1>
+    <div class="rule-box" style="background:var(--terracotta)">
+      <span class="k" style="color:#F5CDA4">Stated once, used all term</span>
+      <span class="t">Any object in a fluid is pushed upward by a force equal to the weight of the fluid it pushes out of the way.</span>
+    </div>
+    <div class="cols c58" style="margin-top:.4cqw">
+      <div class="body-copy">
+        <p>Put a block in water and the water has to go somewhere. The weight of that displaced water <em>is</em> the upward force you get back. Nothing more, nothing less.</p>
+        <p style="margin-top:1.2cqw">Push a beach ball under and you feel this fighting you. Let go and it fires out — because it displaced a lot of water for very little weight of its own.</p>
+      </div>
+      <div class="calc">
+        <span class="lbl">The formula</span>
+        F<sub>b</sub> = ρ × V × g<br>
+        <span class="cmt">ρ &nbsp;= density of water (kg/m³)</span>
+        <span class="cmt">V &nbsp;= volume pushed aside (m³)</span>
+        <span class="cmt">g &nbsp;= gravity, 9.81 m/s²</span>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">04</div>
+  <div class="notes"><b>Key teaching point.</b> "Displaced" is the word they must own. Demo if you have a bucket and a measuring jug: submerge a sealed 2L bottle, catch the overflow, weigh it — that mass is the lift.</div>
+</section>
+
+<!-- 5 TWO FORCES -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Float or Sink</span>Two forces, one answer</h1>
+    <div class="cols c85" style="flex:1;align-items:center">
+      <div>
+        <svg viewBox="0 0 300 250" role="img" aria-label="Diagram of a block floating with buoyancy arrow up and weight arrow down">
+          <rect x="0" y="110" width="300" height="140" fill="#DCE8E6"/>
+          <path d="M0,110 C30,103 55,117 85,110 C115,103 140,117 170,110 C200,103 225,117 255,110 C275,105 290,112 300,110 L300,116 L0,116 Z" fill="#628981"/>
+          <rect x="95" y="78" width="110" height="62" fill="#CF893A" stroke="#963417" stroke-width="2.5"/>
+          <line x1="150" y1="72" x2="150" y2="18" stroke="#2D5016" stroke-width="5"/>
+          <path d="M150,10 l9,15 h-18 Z" fill="#2D5016"/>
+          <text x="162" y="42" font-family="IBM Plex Mono,monospace" font-size="15" font-weight="600" fill="#2D5016">Buoyancy</text>
+          <line x1="150" y1="146" x2="150" y2="200" stroke="#963417" stroke-width="5"/>
+          <path d="M150,208 l9,-15 h-18 Z" fill="#963417"/>
+          <text x="162" y="182" font-family="IBM Plex Mono,monospace" font-size="15" font-weight="600" fill="#963417">Weight</text>
+          <text x="12" y="132" font-family="IBM Plex Mono,monospace" font-size="13" fill="#4B6A64">waterline</text>
+        </svg>
+        <div class="cap">Displaced water pushes up. Gravity pulls down.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.1cqw">
+        <div class="calc" style="border-left-color:var(--pina)">
+          <span class="lbl">It floats</span>
+          Buoyancy &gt; Weight<br><span class="cmt">rises until they balance</span>
+        </div>
+        <div class="calc" style="border-left-color:var(--terracotta)">
+          <span class="lbl">It sinks</span>
+          Buoyancy &lt; Weight<br><span class="cmt">keeps going down</span>
+        </div>
+        <div class="calc" style="border-left-color:var(--acqua)">
+          <span class="lbl">It hovers</span>
+          Buoyancy = Weight<br><span class="cmt">neutral — a submarine's trick</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">05</div>
+  <div class="notes"><b>3 min.</b> Stress that a floating object <i>settles</i> at the depth where the two forces are equal. It doesn't keep rising out of the water — it stops when balance is reached. That depth is the <b>draft</b>, slide 14.</div>
+</section>
+
+<!-- 6 ONE LITRE RULE -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">The Shortcut</span>The one-litre rule</h1>
+    <div class="eq">1 litre of volume under water &nbsp;=&nbsp; <span class="v">1 kilogram of lift</span></div>
+    <div class="cols c2" style="margin-top:.4cqw">
+      <div class="body-copy">
+        <p>Fresh water has a density of <em>1000 kg/m³</em>. One cubic metre holds 1000 litres, so one litre of fresh water weighs exactly one kilogram.</p>
+        <p style="margin-top:1.2cqw">That means you can skip the full formula for every rough calculation this term. Work out the volume in litres, and you have the lift in kilograms.</p>
+      </div>
+      <div class="note">
+        <span class="k">Sea water is different</span>
+        Sea water is denser — about <em>1025 kg/m³</em> — so every litre gives you <strong>1.025 kg</strong> of lift. That's why a boat sits slightly higher at sea than in a river. For our dam testing, use 1.0.
+      </div>
+    </div>
+    <div class="stat-row" style="margin-top:auto">
+      <div class="stat"><div class="v">1 L</div><div class="l">of submerged volume</div></div>
+      <div class="stat"><div class="v">1 kg</div><div class="l">of upward lift, fresh water</div></div>
+      <div class="stat"><div class="v">1000 L</div><div class="l">in one cubic metre</div></div>
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">06</div>
+  <div class="notes"><b>This is the most useful slide in the deck.</b> Make them write it down. Every calculation for the next three weeks reduces to: find the litres, subtract your own weight, divide by 1.5.</div>
+</section>
+
+<!-- 7 DENSITY -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Materials</span>Density decides</h1>
+    <div class="cols c85" style="flex:1">
+      <div style="display:flex;flex-direction:column;gap:1.2cqw">
+        <div class="calc"><span class="lbl">Density</span>ρ = m ÷ V<br><span class="cmt">mass ÷ volume</span></div>
+        <p style="font-size:1.45cqw">Anything <strong>less dense than water</strong> floats on its own. Anything denser must be paired with something that isn't — or trapped air.</p>
+        <div class="note"><span class="k">Watch out</span>Timber soaks up water. Its density climbs by the hour, and so does your raft's weight.</div>
+      </div>
+      <div>
+        <table>
+          <thead><tr><th>Material</th><th style="text-align:right">kg/m³</th><th style="text-align:right">kg per litre</th><th>In water</th></tr></thead>
+          <tbody>
+            <tr><td>Closed-cell foam</td><td class="n">32</td><td class="n">0.032</td><td>Floats</td></tr>
+            <tr><td>Expanded polystyrene</td><td class="n">20</td><td class="n">0.020</td><td>Floats</td></tr>
+            <tr><td>Bamboo, dry</td><td class="n">400</td><td class="n">0.40</td><td>Floats</td></tr>
+            <tr><td>Pine, dry</td><td class="n">500</td><td class="n">0.50</td><td>Floats</td></tr>
+            <tr><td>HDPE (drum wall)</td><td class="n">950</td><td class="n">0.95</td><td>Just floats</td></tr>
+            <tr class="hi"><td>Fresh water</td><td class="n">1000</td><td class="n">1.00</td><td>— the line —</td></tr>
+            <tr><td>Sea water</td><td class="n">1025</td><td class="n">1.025</td><td>—</td></tr>
+            <tr><td>PVC pipe</td><td class="n">1400</td><td class="n">1.40</td><td>Sinks</td></tr>
+            <tr><td>Steel</td><td class="n">7850</td><td class="n">7.85</td><td>Sinks</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">07</div>
+  <div class="notes"><b>Point at the PVC row.</b> PVC sinks — yet we build rafts from it. Why? Because a <i>sealed</i> pipe is mostly air. The material sinks; the sealed shape floats. Same answer as the ship.</div>
+</section>
+
+<!-- 8 DIVIDER: MATHS -->
+<section class="slide divider">
+  <div class="eyebrow">Part Two</div>
+  <h1>Now the mathematics</h1>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">08</div>
+  <div class="notes"><b>Break point.</b> Good place for a 5-minute stretch before the calculation block.</div>
+</section>
+
+<!-- 9 VOLUME -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Step One</span>Find the volume</h1>
+    <svg viewBox="0 0 760 168" role="img" aria-label="Volume formulas for rectangular prism, cylinder, sphere and triangular prism">
+      <g>
+        <path d="M20,50 L120,50 L150,26 L50,26 Z" fill="#E3D7C4" stroke="#963417" stroke-width="2"/>
+        <path d="M120,50 L150,26 L150,104 L120,128 Z" fill="#D3C3AB" stroke="#963417" stroke-width="2"/>
+        <rect x="20" y="50" width="100" height="78" fill="#CF893A" stroke="#963417" stroke-width="2"/>
+        <text x="85" y="152" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="15" font-weight="600" fill="#2D5016">V = l × w × h</text>
+      </g>
+      <g transform="translate(195,0)">
+        <ellipse cx="70" cy="38" rx="46" ry="15" fill="#E3D7C4" stroke="#963417" stroke-width="2"/>
+        <path d="M24,38 L24,110 A46,15 0 0 0 116,110 L116,38" fill="#CF893A" stroke="#963417" stroke-width="2"/>
+        <ellipse cx="70" cy="110" rx="46" ry="15" fill="none" stroke="#963417" stroke-width="2"/>
+        <text x="70" y="152" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="15" font-weight="600" fill="#2D5016">V = π r² h</text>
+      </g>
+      <g transform="translate(370,0)">
+        <circle cx="76" cy="74" r="48" fill="#CF893A" stroke="#963417" stroke-width="2"/>
+        <ellipse cx="76" cy="74" rx="48" ry="17" fill="none" stroke="#963417" stroke-width="1.6" opacity=".6"/>
+        <text x="76" y="152" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="15" font-weight="600" fill="#2D5016">V = ⁴⁄₃ π r³</text>
+      </g>
+      <g transform="translate(545,0)">
+        <path d="M30,120 L90,120 L60,50 Z" fill="#CF893A" stroke="#963417" stroke-width="2"/>
+        <path d="M60,50 L95,30 L125,100 L90,120 Z" fill="#D3C3AB" stroke="#963417" stroke-width="2"/>
+        <path d="M30,120 L65,100 L125,100 L90,120 Z" fill="#E3D7C4" stroke="#963417" stroke-width="2"/>
+        <text x="77" y="152" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="15" font-weight="600" fill="#2D5016">V = ½ b h × L</text>
+      </g>
+    </svg>
+    <div class="cols c2" style="margin-top:.2cqw">
+      <div class="note"><span class="k">Always convert first</span>Work in metres. Then <strong>m³ × 1000 = litres</strong>. A drum quoted as 210 ℓ is already done for you.</div>
+      <div class="note" style="border-left-color:var(--acqua)"><span class="k">A pipe is a tube</span>For a sealed pipe use the <strong>outer</strong> diameter — the whole outside shape is what shoves water aside.</div>
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">09</div>
+  <div class="notes"><b>Practise here.</b> Give them two quick shapes on the board to convert to litres before moving on. Most errors all term will be unit errors, not physics errors.</div>
+</section>
+
+<!-- 10 EXAMPLE 1 -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Worked Example 1</span>The sealed 210 ℓ drum</h1>
+    <div class="cols c2" style="flex:1;align-items:start">
+      <div>
+        <p style="font-size:1.45cqw;margin-bottom:1.1cqw">A sealed plastic drum holds <strong>210 litres</strong> and weighs <strong>15 kg</strong> empty. Will it float, and how much can it hold up?</p>
+        <div class="calc">
+          <span class="lbl">Working</span>
+          <span class="step">Volume &nbsp;&nbsp;&nbsp;= 210 ℓ</span>
+          <span class="step">Lift &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 210 × 1.0 = 210 kg</span>
+          <span class="step">Own weight = 15 kg</span>
+          <span class="step res">Net lift &nbsp;&nbsp;= 210 − 15 = 195 kg</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.2cqw">
+        <div class="rule-box">
+          <span class="k">Answer</span>
+          <span class="t">Yes — and it carries 195 kg</span>
+          <p>Roughly two and a half scouts, from a single drum. This is why drums are the workhorse of raft building.</p>
+        </div>
+        <div class="note"><span class="k">The catch</span>That 210 kg only appears when the drum is <strong>fully submerged</strong>. A drum floating half out of the water is only giving you half its lift.</div>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">10</div>
+  <div class="notes"><b>Work this on the board with them, not for them.</b> Ask for each line before you reveal it.</div>
+</section>
+
+<!-- 11 EXAMPLE 2 -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Worked Example 2</span>A foam block, all the way to a safe load</h1>
+    <div class="cols c58" style="flex:1;align-items:start">
+      <div class="calc" style="font-size:1.35cqw">
+        <span class="lbl">Closed-cell foam · 2.0 m × 0.8 m × 0.4 m · 32 kg/m³</span>
+        <span class="step">1. V = 2.0 × 0.8 × 0.4 = 0.64 m³</span>
+        <span class="step">2. In litres = 0.64 × 1000 = 640 ℓ</span>
+        <span class="step">3. Lift = 640 × 1.0 = 640 kg</span>
+        <span class="step">4. Own weight = 640 × 0.032 = 20.5 kg</span>
+        <span class="step res">5. Net lift = 640 − 20.5 = 619.5 kg</span>
+        <span class="step res">6. Safe load = 619.5 ÷ 1.5 = 413 kg</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.1cqw">
+        <div class="stat" style="border-top-color:var(--solace)">
+          <div class="v">413 kg</div>
+          <div class="l">safe working load from one foam block, after a 1.5× safety factor</div>
+        </div>
+        <div class="note" style="border-left-color:var(--pina)">
+          <span class="k">Notice</span>
+          The foam's own weight took only <strong>3%</strong> of its lift. Hold that number — compare it to the next slide.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">11</div>
+  <div class="notes"><b>Six clean steps.</b> Insist they show all six in homework. Step 6 (the safety factor) is explained on slide 13 — tell them it's coming if they ask now.</div>
+</section>
+
+<!-- 12 EXAMPLE 3 -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Worked Example 3</span>Sealed PVC — the one that surprises you</h1>
+    <div class="cols c58" style="flex:1;align-items:start">
+      <div class="calc" style="font-size:1.32cqw">
+        <span class="lbl">110 mm PVC · 3 m long · sealed at both ends</span>
+        <span class="step">Outer V = π × 0.0508² × 3 = 24.3 ℓ</span>
+        <span class="step">Wall V &nbsp;= 24.3 − 18.6 = 5.7 ℓ</span>
+        <span class="step">Pipe mass = 5.7 × 1.4 = 8.0 kg</span>
+        <span class="step res">Net per pipe = 24.3 − 8.0 = 16.3 kg</span>
+        <span class="cmt">─────────────────────────</span>
+        <span class="step">Six pipes: lift = 146 kg</span>
+        <span class="step">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; weight = 48 kg</span>
+        <span class="step res">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; net = 98 kg → safe 65 kg</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.1cqw">
+        <div class="rule-box" style="background:var(--terracotta)">
+          <span class="k" style="color:#F5CDA4">The lesson</span>
+          <span class="t">PVC eats a third of its own lift</span>
+          <p>Foam gave away 3% to its own weight. PVC gives away 33%. Six sealed pipes won't carry one scout safely.</p>
+        </div>
+        <div class="note"><span class="k">So why use it?</span>Pipe makes an excellent <strong>frame</strong> — stiff, cheap, waterproof. Use it for structure, and get your lift from foam or drums.</div>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">12</div>
+  <div class="notes"><b>The pedagogical payoff of the deck.</b> They now see why material choice is a real engineering decision, not a shopping preference. Expect someone to propose foam-filled pipe — good idea, let them chase it.</div>
+</section>
+
+<!-- 13 NET BUOYANCY -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">The Equation That Matters</span>Net buoyancy</h1>
+    <div class="eq">Lift you can use &nbsp;=&nbsp; Total displacement &nbsp;−&nbsp; <span class="v">the raft's own weight</span></div>
+    <p style="font-size:1.5cqw;margin-top:.4cqw">Your raft has to float <em>itself</em> before it floats anybody. Frame, rope, deck, fasteners — all of it is cargo you are carrying before a single person steps on.</p>
+    <table style="margin-top:.6cqw">
+      <thead><tr><th>Component</th><th style="text-align:right">Displacement</th><th style="text-align:right">Own weight</th></tr></thead>
+      <tbody>
+        <tr><td>8 foam blocks (150 ℓ each)</td><td class="n">1 200 kg</td><td class="n">38 kg</td></tr>
+        <tr><td>12 sealed PVC pipes</td><td class="n">292 kg</td><td class="n">96 kg</td></tr>
+        <tr><td>Timber frame</td><td class="n">—</td><td class="n">25 kg</td></tr>
+        <tr><td>Rope, straps, fasteners</td><td class="n">—</td><td class="n">12 kg</td></tr>
+        <tr class="hi"><td>Totals</td><td class="n">1 492 kg</td><td class="n">171 kg</td></tr>
+      </tbody>
+    </table>
+    <div class="stat-row" style="margin-top:auto">
+      <div class="stat"><div class="v">1 321 kg</div><div class="l">net buoyancy</div></div>
+      <div class="stat"><div class="v">880 kg</div><div class="l">safe working load at 1.5×</div></div>
+      <div class="stat"><div class="v">4.1×</div><div class="l">actual safety factor with four scouts aboard</div></div>
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">13</div>
+  <div class="notes"><b>This is the template for their homework problem 3.</b> Walk the table column by column. Note that frame and fasteners displace nothing useful — they're pure penalty.</div>
+</section>
+
+<!-- 14 SAFETY FACTOR -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Engineering Practice</span>Why we divide by 1.5</h1>
+    <div class="cols c2" style="flex:1;align-items:start">
+      <div class="body-copy">
+        <p>Your calculation assumes everything is perfect. Reality is not.</p>
+        <ul style="margin-top:1.2cqw">
+          <li>Timber absorbs water and gains weight</li>
+          <li>A seal leaks and a pipe half fills</li>
+          <li>Everyone crowds to one side at once</li>
+          <li>A scout is heavier than the 70 kg you assumed</li>
+          <li>Your tape measure was off by 3 cm</li>
+        </ul>
+        <p style="margin-top:1.3cqw">A safety factor is the margin that absorbs all of it. <strong>1.5× is our minimum</strong> for anything carrying people.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.2cqw">
+        <div class="calc">
+          <span class="lbl">Both directions</span>
+          <span class="step">Safe load = Net lift ÷ 1.5</span>
+          <span class="step">Actual SF = Net lift ÷ Load carried</span>
+        </div>
+        <div class="calc" style="border-left-color:var(--pina)">
+          <span class="lbl">Example</span>
+          <span class="step">Net lift = 200 kg</span>
+          <span class="step res">Safe load = 200 ÷ 1.5 = 133 kg</span>
+        </div>
+        <div class="note"><span class="k">For comparison</span>Lifts use 8–12×. Bridges use about 2×. Aircraft use 1.5× — and weigh every bolt to keep it there.</div>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">14</div>
+  <div class="notes"><b>Non-negotiable rule for this course.</b> Any design presented without a stated safety factor gets sent back. Say that now so it isn't a surprise in Week 2.</div>
+</section>
+
+<!-- 15 DRAFT -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">How It Sits</span>Draft and freeboard</h1>
+    <div class="cols c85" style="flex:1;align-items:center">
+      <div>
+        <svg viewBox="0 0 320 200" role="img" aria-label="Cross-section of a raft showing draft below the waterline and freeboard above">
+          <rect x="0" y="92" width="320" height="108" fill="#DCE8E6"/>
+          <rect x="60" y="46" width="200" height="82" fill="#CF893A" stroke="#963417" stroke-width="2.5"/>
+          <rect x="60" y="92" width="200" height="36" fill="#B0702C" stroke="#963417" stroke-width="2.5"/>
+          <line x1="0" y1="92" x2="320" y2="92" stroke="#628981" stroke-width="3"/>
+          <line x1="285" y1="46" x2="285" y2="92" stroke="#2D5016" stroke-width="2.5"/>
+          <line x1="278" y1="46" x2="292" y2="46" stroke="#2D5016" stroke-width="2.5"/>
+          <line x1="278" y1="92" x2="292" y2="92" stroke="#2D5016" stroke-width="2.5"/>
+          <text x="298" y="74" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="#2D5016">free-</text>
+          <text x="298" y="88" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="#2D5016">board</text>
+          <line x1="35" y1="92" x2="35" y2="128" stroke="#963417" stroke-width="2.5"/>
+          <line x1="28" y1="92" x2="42" y2="92" stroke="#963417" stroke-width="2.5"/>
+          <line x1="28" y1="128" x2="42" y2="128" stroke="#963417" stroke-width="2.5"/>
+          <text x="4" y="148" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="#963417">draft</text>
+        </svg>
+        <div class="cap">Draft is what's under. Freeboard is what's left above.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.1cqw">
+        <div class="calc" style="font-size:1.3cqw">
+          <span class="lbl">3 m × 2 m raft, 491 kg loaded</span>
+          <span class="step">Water to displace = 491 ℓ = 0.491 m³</span>
+          <span class="step">Waterplane area = 3 × 2 = 6 m²</span>
+          <span class="step res">Draft = 0.491 ÷ 6 = 0.082 m = 8.2 cm</span>
+          <span class="step res">Freeboard = 30 − 8.2 = 21.8 cm</span>
+        </div>
+        <div class="note"><span class="k">Design rule</span>Keep at least <strong>10 cm of freeboard</strong> when fully loaded. Less than that and the first wave comes aboard.</div>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">15</div>
+  <div class="notes"><b>Ask:</b> what happens to draft when a fifth scout climbs on? It increases — and freeboard shrinks by the same amount. This is the number they will physically measure in Week 3.</div>
+</section>
+
+<!-- 16 DRAG -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Moving Through Water</span>Drag doubles badly</h1>
+    <div class="cols c58" style="flex:1;align-items:center">
+      <div>
+        <div class="calc" style="font-size:1.35cqw">
+          <span class="lbl">Drag force</span>
+          F<sub>d</sub> = ½ × ρ × v² × C<sub>d</sub> × A<br>
+          <span class="cmt">v = speed &nbsp; C<sub>d</sub> = shape factor &nbsp; A = area facing forward</span>
+        </div>
+        <p style="font-size:1.45cqw;margin-top:1.2cqw">The <strong>v²</strong> is the whole story. Double your speed and drag doesn't double — it <strong>quadruples</strong>.</p>
+      </div>
+      <div>
+        <svg viewBox="0 0 300 190" role="img" aria-label="Chart showing drag force rising with the square of speed">
+          <line x1="42" y1="160" x2="288" y2="160" stroke="#241E19" stroke-width="2"/>
+          <line x1="42" y1="160" x2="42" y2="14" stroke="#241E19" stroke-width="2"/>
+          <path d="M42,160 Q160,152 288,22" fill="none" stroke="#963417" stroke-width="3.5"/>
+          <circle cx="103" cy="157" r="5" fill="#CF893A" stroke="#963417" stroke-width="2"/>
+          <text x="97" y="147" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="600" fill="#963417">24 N</text>
+          <circle cx="165" cy="126" r="5" fill="#CF893A" stroke="#963417" stroke-width="2"/>
+          <text x="150" y="116" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="600" fill="#963417">96 N</text>
+          <circle cx="288" cy="22" r="5" fill="#CF893A" stroke="#963417" stroke-width="2"/>
+          <text x="240" y="16" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="600" fill="#963417">384 N</text>
+          <text x="103" y="176" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#6B6058">0.5</text>
+          <text x="165" y="176" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#6B6058">1.0</text>
+          <text x="288" y="176" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#6B6058">2.0</text>
+          <text x="165" y="189" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#6B6058">speed (m/s)</text>
+          <text x="14" y="90" font-family="IBM Plex Mono,monospace" font-size="12" fill="#6B6058" transform="rotate(-90 14 90)">drag (N)</text>
+        </svg>
+        <div class="cap">2 m wide raft, 8 cm draft, C&#8338; = 1.2</div>
+      </div>
+    </div>
+    <div class="note" style="border-left-color:var(--acqua)"><span class="k">What you control</span>You can't change the water. You <em>can</em> change <strong>A</strong> — how much raft is shoved through the water — and <strong>C<sub>d</sub></strong>, by pointing a shaped nose forward instead of a flat wall.</div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">16</div>
+  <div class="notes"><b>Relate it to paddling.</b> 2 m/s is a hard sprint on a raft. Ask them to feel the difference between an easy paddle and a sprint — that's the curve, in their arms.</div>
+</section>
+
+<!-- 17 STABILITY -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Staying Upright</span>Why wide wins</h1>
+    <div class="cols c85" style="flex:1;align-items:center">
+      <div>
+        <svg viewBox="0 0 340 180" role="img" aria-label="Comparison of a narrow raft tipping and a wide raft righting itself">
+          <g>
+            <rect x="0" y="88" width="150" height="92" fill="#DCE8E6"/>
+            <line x1="0" y1="88" x2="150" y2="88" stroke="#628981" stroke-width="2.5"/>
+            <g transform="rotate(-20 75 92)">
+              <rect x="46" y="66" width="58" height="42" fill="#CF893A" stroke="#963417" stroke-width="2.5"/>
+              <circle cx="75" cy="60" r="5.5" fill="#963417"/>
+              <circle cx="75" cy="96" r="5.5" fill="#2D5016"/>
+            </g>
+            <text x="75" y="24" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="#963417">NARROW</text>
+            <text x="75" y="40" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#963417">keeps tipping</text>
+          </g>
+          <g transform="translate(190,0)">
+            <rect x="0" y="88" width="150" height="92" fill="#DCE8E6"/>
+            <line x1="0" y1="88" x2="150" y2="88" stroke="#628981" stroke-width="2.5"/>
+            <g transform="rotate(-9 75 92)">
+              <rect x="18" y="74" width="114" height="32" fill="#CF893A" stroke="#963417" stroke-width="2.5"/>
+              <circle cx="75" cy="68" r="5.5" fill="#963417"/>
+              <circle cx="52" cy="98" r="5.5" fill="#2D5016"/>
+            </g>
+            <path d="M96,54 A34,34 0 0 1 118,74" fill="none" stroke="#2D5016" stroke-width="3"/>
+            <path d="M118,80 l-7,-13 l13,2 Z" fill="#2D5016"/>
+            <text x="75" y="24" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="#2D5016">WIDE</text>
+            <text x="75" y="40" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#2D5016">pushes back upright</text>
+          </g>
+        </svg>
+        <div class="cap"><span style="color:#963417">●</span> centre of gravity &nbsp;&nbsp; <span style="color:#2D5016">●</span> centre of buoyancy</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.1cqw">
+        <p style="font-size:1.45cqw">Tip a raft and its <strong>centre of buoyancy</strong> shifts sideways toward the submerged side. On a wide raft it shifts far enough to push the raft back level. On a narrow one it doesn't — and over you go.</p>
+        <div class="note"><span class="k">Three rules</span>Build <strong>wide</strong>. Keep mass <strong>low</strong> — sit, don't stand. Spread load <strong>evenly</strong> side to side.</div>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">17</div>
+  <div class="notes"><b>Demo if you can:</b> a narrow plank vs a wide board in a tub, press one edge of each. The difference is obvious and memorable. This sets up Week 2's weight distribution work.</div>
+</section>
+
+<!-- 18 TRADE-OFFS -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Engineering Reality</span>Every choice costs you something</h1>
+    <table>
+      <thead><tr><th>If you choose</th><th>You gain</th><th>You lose</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Wide and flat</strong></td><td>Stability, deck space, easy to build</td><td>Slow — big frontal area, high drag</td></tr>
+        <tr><td><strong>Narrow and long</strong></td><td>Fast, cuts water cleanly</td><td>Tips easily, cramped, harder to board</td></tr>
+        <tr><td><strong>More buoyancy</strong></td><td>Higher freeboard, bigger margin</td><td>Heavier, costlier, more to carry to the water</td></tr>
+        <tr><td><strong>Heavier frame</strong></td><td>Rigid, survives rough handling</td><td>Eats net lift before anyone boards</td></tr>
+        <tr><td><strong>Cheaper materials</strong></td><td>Fits the budget</td><td>Heavier, absorbs water, fails sooner</td></tr>
+      </tbody>
+    </table>
+    <div class="rule-box" style="margin-top:auto">
+      <span class="k">The engineer's job</span>
+      <span class="t">There is no best raft — only the best raft <em style="color:#F5CDA4">for these conditions and this budget</em>.</span>
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">18</div>
+  <div class="notes"><b>Ask them to pick:</b> calm dam versus moving river. Different winners. Make them justify with the table, not with taste.</div>
+</section>
+
+<!-- 19 PROCESS -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">How Engineers Work</span>The design process</h1>
+    <div class="cols c2" style="flex:1">
+      <ol style="font-size:1.5cqw">
+        <li><strong>Define</strong> the problem and the constraints</li>
+        <li><strong>Research</strong> materials and what others have done</li>
+        <li><strong>Specify</strong> requirements — load, budget, size</li>
+        <li><strong>Generate</strong> several different solutions</li>
+      </ol>
+      <ol start="5" style="font-size:1.5cqw">
+        <li><strong>Choose</strong> one and justify why</li>
+        <li><strong>Build</strong> a prototype</li>
+        <li><strong>Test</strong> it and record real data</li>
+        <li><strong>Improve</strong> — then go back to step 4</li>
+      </ol>
+    </div>
+    <div class="note" style="border-left-color:var(--pina)"><span class="k">It's a loop, not a line</span>Step 8 sends you back to step 4. Real engineering teams go round this circle many times. Over three weeks you go round it <strong>once</strong> — Week 1 is steps 1–5, Week 2 is step 6, Week 3 is steps 7 and 8.</div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">19</div>
+  <div class="notes"><b>Map the course onto the loop explicitly.</b> It helps them see the three weeks as one project rather than three lessons.</div>
+</section>
+
+<!-- 20 CHALLENGE -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Your Brief</span>The Week 1 design challenge</h1>
+    <div class="cols c58" style="flex:1;align-items:start">
+      <div>
+        <div class="rule-box" style="background:var(--terracotta)">
+          <span class="k" style="color:#F5CDA4">In your patrol</span>
+          <span class="t">Design a raft that safely carries four scouts across still water.</span>
+        </div>
+        <p style="font-size:1.42cqw;margin-top:1.3cqw">Bring a labelled sketch, a materials list, and the full calculation — every step, units shown — to Week 2.</p>
+      </div>
+      <div>
+        <table>
+          <thead><tr><th>Constraint</th><th style="text-align:right">Value</th></tr></thead>
+          <tbody>
+            <tr><td>Crew</td><td class="n">4 scouts</td></tr>
+            <tr><td>Assume each weighs</td><td class="n">80 kg</td></tr>
+            <tr><td>Design load</td><td class="n">320 kg</td></tr>
+            <tr><td>Minimum safety factor</td><td class="n">1.5×</td></tr>
+            <tr><td>Minimum freeboard, loaded</td><td class="n">10 cm</td></tr>
+            <tr><td>Maximum footprint</td><td class="n">3 m × 2 m</td></tr>
+            <tr class="hi"><td>Budget</td><td class="n">R5 000</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">20</div>
+  <div class="notes"><b>Assign patrols now.</b> 4–5 per patrol. They should leave with roles agreed: who researches materials, who does the maths, who draws. Budget is per patrol.</div>
+</section>
+
+<!-- 21 HOMEWORK -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Before Next Week</span>Homework — 70 marks + 10 bonus</h1>
+    <div class="cols c2" style="flex:1;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:1.1cqw">
+        <div class="calc" style="border-left-color:var(--acqua);font-size:1.3cqw">
+          <span class="lbl">Section 1 · 25 marks</span>Material research — six materials, with density, cost and where you'd use each
+        </div>
+        <div class="calc" style="border-left-color:var(--pina);font-size:1.3cqw">
+          <span class="lbl">Section 2 · 30 marks</span>Physics reflection — five written questions on today's principles
+        </div>
+        <div class="calc" style="border-left-color:var(--terracotta);font-size:1.3cqw">
+          <span class="lbl">Section 3 · 35 marks</span>Calculations — three multi-step problems, all working shown
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.1cqw">
+        <div class="note"><span class="k">How to submit</span>Open the homework link, type your answers, press submit. It saves as you type, so you can close the tab and come back.</div>
+        <div class="note" style="border-left-color:var(--solace)"><span class="k">Marks come from method</span>A wrong final number with correct, clearly shown working scores far better than a right number with no working.</div>
+        <div class="note" style="border-left-color:var(--acqua)"><span class="k">Bring to Week 2</span>Your patrol's sketch, materials list and calculation — we build from it.</div>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 1 · Physics of Flotation</div><div class="num">21</div>
+  <div class="notes"><b>Hand out the Physics &amp; Maths Reference Guide now.</b> It has every formula from today plus worked examples and practice problems with answers. Tell them Section 3 of the homework maps directly onto Sections 2 and 6 of the guide.</div>
+</section>
+
+<!-- 22 QUESTIONS -->
+<section class="slide divider" style="background:var(--pina)">
+  <div class="eyebrow" style="color:#B9C4A8">End of Week 1</div>
+  <h1>What questions do you have?</h1>
+  <p style="color:#B9C4A8;font-size:1.9cqw;margin-top:1.6cqw;max-width:34ch">Next week we stop calculating and start building.</p>
+  <div class="tag" style="color:#8FA07C">Week 1 · Physics of Flotation</div><div class="num" style="color:#F0C89A">22</div>
+  <div class="notes"><b>Close the loop:</b> go back to the bolt and the ship. Ask someone to answer slide 3 properly now. They should say "the ship displaces more water than it weighs."</div>
+</section>
+
+</div>
+</div>
+
+<progress id="prog" max="22" value="1"></progress>
+
+<div class="bar">
+  <button type="button" id="prev">← Prev</button>
+  <button type="button" id="next">Next →</button>
+  <button type="button" id="notesBtn">Notes</button>
+  <button type="button" id="printBtn">Print</button>
+  <span class="hint">Arrow keys · N for notes · F for full screen</span>
+  <span class="count"><b id="cur">1</b> / 22</span>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0, cur=document.getElementById('cur'), prog=document.getElementById('prog');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){s.classList.toggle('on',k===i);});
+    cur.textContent=i+1; prog.value=i+1;
+  }
+  document.getElementById('next').onclick=function(){show(i+1);};
+  document.getElementById('prev').onclick=function(){show(i-1);};
+  document.getElementById('printBtn').onclick=function(){window.print();};
+  document.getElementById('notesBtn').onclick=function(){document.body.classList.toggle('notes-on');};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();show(i+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1);}
+    else if(e.key==='Home'){show(0);}
+    else if(e.key==='End'){show(slides.length-1);}
+    else if(e.key==='n'||e.key==='N'){document.body.classList.toggle('notes-on');}
+    else if(e.key==='f'||e.key==='F'){
+      var d=document.getElementById('deck');
+      if(!document.fullscreenElement){d.requestFullscreen&&d.requestFullscreen();}
+      else{document.exitFullscreen();}
+    }
+  });
+  var x0=null;
+  var deck=document.getElementById('deck');
+  deck.addEventListener('touchstart',function(e){x0=e.changedTouches[0].clientX;},{passive:true});
+  deck.addEventListener('touchend',function(e){
+    if(x0===null)return; var dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>50){show(dx<0?i+1:i-1);} x0=null;
+  },{passive:true});
+  show(0);
+})();
+</script>
+</body>
+</html>

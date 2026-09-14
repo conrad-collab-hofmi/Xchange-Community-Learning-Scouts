@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Water Decides</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+  <style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<style>
+:root{
+  --terracotta:#963417; --pina:#2D5016; --acqua:#628981; --solace:#CF893A;
+  --paper:#FAF7F2; --surface:#F2EDE5; --ink:#241E19; --muted:#6B6058;
+  --rule:#DED5C8;
+  --display:'Archivo',-apple-system,'Segoe UI',sans-serif;
+  --body:'Source Serif 4',Georgia,serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1A1613;color:var(--ink);font-family:var(--body);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:16px;gap:12px}
+
+.stage{width:100%;max-width:1180px}
+.deck{position:relative;width:100%;aspect-ratio:16/9;background:var(--paper);
+  container-type:size;container-name:slide;overflow:hidden;
+  box-shadow:0 18px 60px rgba(0,0,0,.55);border-radius:4px}
+
+.slide{position:absolute;inset:0;padding:5.2cqw 5.6cqw 7.4cqw;display:none;
+  flex-direction:column;background:var(--paper)}
+.slide.on{display:flex}
+
+/* ---- waterline footer ---- */
+.slide::after{content:"";position:absolute;left:5.6cqw;right:5.6cqw;bottom:4.4cqw;
+  height:2px;background:var(--acqua);opacity:.45}
+.tag{position:absolute;bottom:3.0cqw;left:5.6cqw;font-family:var(--mono);
+  font-size:1.08cqw;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.num{position:absolute;bottom:2.72cqw;right:5.6cqw;font-family:var(--mono);
+  font-size:1.5cqw;font-weight:600;color:var(--terracotta);
+  background:var(--paper);padding:0 .5cqw}
+
+/* ---- typography ---- */
+h1{font-family:var(--display);font-weight:700;font-size:3.5cqw;line-height:1.06;
+  color:var(--terracotta);text-wrap:balance;letter-spacing:-.015em}
+h1 .lead{display:block;font-family:var(--mono);font-size:1.12cqw;font-weight:600;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--acqua);margin-bottom:1.1cqw}
+h2{font-family:var(--display);font-weight:600;font-size:1.82cqw;color:var(--pina);
+  letter-spacing:-.005em}
+h3{font-family:var(--mono);font-weight:600;font-size:1.05cqw;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--acqua)}
+p,li{font-size:1.62cqw;line-height:1.5}
+.hero-rule{width:8cqw;height:4px;background:var(--solace);margin:1.5cqw 0 1.9cqw}
+.body-copy{max-width:62ch}
+strong{font-weight:600;color:var(--terracotta)}
+em{font-style:normal;font-family:var(--mono);font-size:.94em;color:var(--pina);font-weight:500}
+
+ul{list-style:none;display:flex;flex-direction:column;gap:1.0cqw}
+ul li{padding-left:2.4cqw;position:relative}
+ul li::before{content:"";position:absolute;left:.5cqw;top:.72em;width:.85cqw;height:.85cqw;
+  background:var(--solace);border-radius:50%}
+ol{padding-left:2.6cqw;display:flex;flex-direction:column;gap:.8cqw}
+ol li::marker{font-family:var(--mono);font-weight:600;color:var(--acqua);font-size:.9em}
+
+.flow{display:flex;flex-direction:column;gap:1.5cqw;flex:1;min-height:0}
+.cols{display:grid;gap:2.6cqw;align-items:start;align-content:center}
+.c2{grid-template-columns:1fr 1fr}
+.c58{grid-template-columns:1.25fr 1fr}
+.c85{grid-template-columns:1fr 1.45fr}
+
+/* ---- the formula block: the deck's hero element ---- */
+.calc{background:#E8EFED;border-left:5px solid var(--solace);padding:1.5cqw 1.9cqw;
+  font-family:var(--mono);font-size:1.42cqw;line-height:1.75;color:#1E3A34}
+.calc .lbl{display:block;font-size:.98cqw;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--acqua);margin-bottom:.7cqw;font-weight:600}
+.calc .res{color:var(--terracotta);font-weight:600}
+.calc .step{display:block}
+.calc .cmt{color:#7C8E89}
+
+.eq{font-family:var(--mono);font-size:2.15cqw;font-weight:500;color:var(--pina);
+  text-align:center;padding:1.7cqw 1cqw;background:var(--surface);
+  border-top:3px solid var(--acqua);border-bottom:3px solid var(--acqua)}
+.eq .v{color:var(--terracotta);font-weight:600}
+
+.rule-box{background:var(--pina);color:#F0EDE6;padding:1.8cqw 2.2cqw;display:flex;
+  flex-direction:column;gap:.7cqw}
+.rule-box .k{font-family:var(--mono);font-size:1.0cqw;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--solace);font-weight:600}
+.rule-box .t{font-family:var(--display);font-weight:700;font-size:2.3cqw;line-height:1.15}
+.rule-box p{font-size:1.4cqw;color:#CFC9BE;line-height:1.45}
+
+.note{background:var(--surface);border-left:4px solid var(--terracotta);
+  padding:1.2cqw 1.5cqw;font-size:1.4cqw;line-height:1.5}
+.note .k{font-family:var(--mono);font-size:.95cqw;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--terracotta);font-weight:600;display:block;margin-bottom:.4cqw}
+
+table{width:100%;border-collapse:collapse;font-size:1.3cqw}
+th{font-family:var(--mono);font-size:.95cqw;letter-spacing:.12em;text-transform:uppercase;
+  text-align:left;padding:.75cqw .9cqw;background:var(--terracotta);color:#FAF7F2;font-weight:600}
+td{padding:.68cqw .9cqw;border-bottom:1px solid var(--rule)}
+tbody tr:nth-child(even){background:var(--surface)}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+tr.hi td{background:#E8EFED;font-weight:600;color:var(--pina)}
+
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6cqw}
+.stat{border-top:3px solid var(--acqua);padding-top:1.0cqw}
+.stat .v{font-family:var(--mono);font-size:2.9cqw;font-weight:600;color:var(--terracotta);
+  line-height:1;font-variant-numeric:tabular-nums}
+.stat .l{font-size:1.18cqw;color:var(--muted);margin-top:.5cqw;line-height:1.35}
+
+svg{display:block;width:100%;height:auto}
+.cap{font-family:var(--mono);font-size:1.0cqw;color:var(--muted);text-align:center;
+  margin-top:.6cqw;letter-spacing:.04em}
+
+/* ---- title slide ---- */
+.title-slide{background:var(--pina);padding:0;justify-content:flex-end}
+.title-slide::after{display:none}
+.title-inner{padding:0 6cqw 9cqw;position:relative;z-index:2}
+.title-slide .eyebrow{font-family:var(--mono);font-size:1.25cqw;letter-spacing:.26em;
+  text-transform:uppercase;color:var(--solace);font-weight:600;margin-bottom:1.6cqw}
+.title-slide h1{color:#FBF8F3;font-size:6.6cqw;line-height:.94;letter-spacing:-.028em}
+.title-slide .sub{font-size:2.0cqw;color:#B9C4A8;margin-top:1.7cqw;max-width:44ch}
+.title-slide .meta{font-family:var(--mono);font-size:1.15cqw;color:#8FA07C;margin-top:2.6cqw;
+  letter-spacing:.1em;text-transform:uppercase;display:flex;gap:1.4cqw;flex-wrap:wrap}
+.title-slide .meta span::after{content:" ·";color:var(--solace)}
+.title-slide .meta span:last-child::after{content:""}
+.wave{position:absolute;left:0;right:0;bottom:0;height:31cqw;z-index:1;opacity:.9}
+
+/* ---- section divider ---- */
+.divider{background:var(--terracotta);justify-content:center;align-items:flex-start}
+.divider::after{background:var(--solace);opacity:.7}
+.divider h1{color:#FBF8F3;font-size:5.2cqw;max-width:20ch}
+.divider .eyebrow{font-family:var(--mono);font-size:1.15cqw;letter-spacing:.24em;
+  text-transform:uppercase;color:#F0C89A;font-weight:600;margin-bottom:1.4cqw}
+.divider .tag,.divider .num{color:#F0C89A;background:none}
+
+/* ---- facilitator notes ---- */
+.notes{display:none}
+body.notes-on .notes{display:block;position:absolute;left:0;right:0;bottom:0;
+  background:#241E19;color:#E8DFD2;padding:1.4cqw 5.6cqw;font-family:var(--mono);
+  font-size:1.12cqw;line-height:1.55;border-top:3px solid var(--solace);z-index:5}
+.notes b{color:var(--solace);font-weight:600}
+
+/* ---- controls ---- */
+.bar{width:100%;max-width:1180px;display:flex;align-items:center;gap:14px;
+  font-family:var(--mono);font-size:12px;color:#9C9084;flex-wrap:wrap}
+.bar button{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;background:#2E2823;color:#D8CCBC;border:1px solid #453C34;
+  padding:8px 14px;border-radius:3px;cursor:pointer;transition:background .15s}
+.bar button:hover{background:#3D342C;color:#FAF7F2}
+.bar button:focus-visible{outline:2px solid var(--solace);outline-offset:2px}
+.bar .count{margin-left:auto;color:#C9BCAC;font-variant-numeric:tabular-nums}
+.bar .hint{color:#6E6359}
+progress{-webkit-appearance:none;appearance:none;width:100%;height:3px;border:none;
+  background:#2E2823;display:block;max-width:1180px}
+progress::-webkit-progress-bar{background:#2E2823}
+progress::-webkit-progress-value{background:var(--solace)}
+progress::-moz-progress-bar{background:var(--solace)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+@media print{
+  body{background:#fff;padding:0;display:block}
+  .bar,progress{display:none}
+  .stage{max-width:none}
+  .deck{box-shadow:none;border-radius:0;aspect-ratio:auto}
+  .slide{display:flex!important;position:relative;inset:auto;width:100%;
+    height:100vh;page-break-after:always;break-after:page}
+  @page{size:landscape}
+}
+</style>
+
+<div class="stage">
+<div class="deck" id="deck">
+
+<!-- 1 TITLE -->
+<section class="slide title-slide on">
+  <svg class="wave" viewBox="0 0 1200 300" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,150 C150,105 300,195 450,150 C600,105 750,195 900,150 C1050,105 1150,180 1200,160 L1200,300 L0,300 Z" fill="#3D621A"/>
+    <path d="M0,195 C150,155 300,235 450,195 C600,155 750,235 900,195 C1050,155 1150,225 1200,205 L1200,300 L0,300 Z" fill="#628981" opacity=".55"/>
+  </svg>
+  <div class="title-inner">
+    <div class="eyebrow">Week 3 of 3 &nbsp;·&nbsp; Xchange Community Learning</div>
+    <h1>The Water<br>Decides</h1>
+    <p class="sub">Testing what you built, measuring what actually happens, and explaining the difference.</p>
+    <div class="meta"><span>Heritage of Faith Ministries</span><span>Scouts Seniors 14–18</span><span>120 minutes</span></div>
+  </div>
+  <div class="notes"><b>Water day.</b> Safety briefing before anything else — slide 3. Keep the theory to 20 minutes total; they should be at the water by the 30-minute mark. Analysis happens back on the bank.</div>
+</section>
+
+<!-- 2 WHERE WE ARE -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Orientation</span>The last two steps</h1>
+    <div class="cols c2" style="flex:1;align-items:start">
+      <ol style="font-size:1.42cqw">
+        <li style="opacity:.42">Define the problem</li>
+        <li style="opacity:.42">Research materials</li>
+        <li style="opacity:.42">Specify requirements</li>
+        <li style="opacity:.42">Generate solutions</li>
+        <li style="opacity:.42">Choose and justify</li>
+        <li style="opacity:.42">Build a prototype</li>
+        <li><strong>Test and record data</strong> &nbsp;← today</li>
+        <li><strong>Improve</strong> &nbsp;← today</li>
+      </ol>
+      <div class="rule-box">
+        <span class="k">Today's job</span>
+        <span class="t">Find out whether you were right — and if not, work out exactly why.</span>
+        <p>A raft that behaves differently from your prediction is not a failure. An unexplained difference is.</p>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">02</div>
+  <div class="notes"><b>Set the tone early:</b> nobody is being marked on whether their raft floats well. They're marked on the quality of their measurement and explanation.</div>
+</section>
+
+<!-- 3 SAFETY -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Before Anything Else</span>Water safety briefing</h1>
+    <div class="cols c2" style="flex:1;align-items:start">
+      <div>
+        <h3>Every person, every time</h3>
+        <ul style="margin-top:1.0cqw;font-size:1.38cqw">
+          <li>Life jacket on and fastened before you approach the edge</li>
+          <li>Shallow water first — waist deep, no exceptions</li>
+          <li>Two supervisors on duty, one in the water</li>
+          <li>Throw line and reach pole on the bank, in someone's hands</li>
+          <li>Nobody enters the water alone or unannounced</li>
+        </ul>
+      </div>
+      <div>
+        <h3>If something goes wrong</h3>
+        <ul style="margin-top:1.0cqw;font-size:1.38cqw">
+          <li>Let the raft go — it floats, you swim</li>
+          <li>Shout, don't struggle silently</li>
+          <li>Reach or throw from the bank. Never swim to a rescue</li>
+          <li>Head count after every single test run</li>
+        </ul>
+      </div>
+    </div>
+    <div class="rule-box" style="background:var(--terracotta);margin-top:auto">
+      <span class="k" style="color:#F5CDA4">Overrides everything</span>
+      <span class="t">Any person may stop a test at any moment, for any reason, and does not have to explain why.</span>
+    </div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">03</div>
+  <div class="notes"><b>Read every line aloud. Head count now and after each run.</b> Confirm both supervisors are in position and the throw line is manned before the first raft touches water.</div>
+</section>
+
+<!-- 4 DIVIDER -->
+<section class="slide divider">
+  <div class="eyebrow">Part One</div>
+  <h1>The test protocol</h1>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">04</div>
+  <div class="notes"><b>Three phases, in order, no skipping.</b> A patrol that jumps to maximum load has no baseline and no usable data.</div>
+</section>
+
+<!-- 5 PHASE 1 -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Phase One</span>Unloaded — establish your baseline</h1>
+    <div class="cols c58" style="flex:1;align-items:start">
+      <div class="body-copy">
+        <p>Float the raft empty. Nobody aboard, nothing on the deck.</p>
+        <p style="margin-top:1.2cqw">This tells you the truth about your raft's <strong>own weight</strong> — including every litre of water the timber and rope have already absorbed since you built it.</p>
+        <p style="margin-top:1.2cqw">Every later measurement is compared against this one, so take your time and measure it properly.</p>
+      </div>
+      <div class="calc" style="font-size:1.3cqw">
+        <span class="lbl">Record</span>
+        <span class="step">Draft at each of the 4 corners</span>
+        <span class="step">Does it sit level? &nbsp;Y / N</span>
+        <span class="step">Which corner sits lowest?</span>
+        <span class="step">Any bubbles rising? &nbsp;Y / N</span>
+        <span class="step res">Average unloaded draft = ____ cm</span>
+      </div>
+    </div>
+    <div class="note" style="margin-top:auto"><span class="k">Four corners, not one</span>If the four readings differ by more than 2 cm, your raft is out of balance — that is a <strong>finding</strong>, and it belongs in your analysis. Don't fix it silently.</div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">05</div>
+  <div class="notes"><b>Slow them down here.</b> The temptation is to rush to loading. A sloppy baseline poisons every number that follows.</div>
+</section>
+
+<!-- 6 PHASE 2 -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Phase Two</span>Progressive loading — one step at a time</h1>
+    <div class="cols c58" style="flex:1;align-items:start">
+      <div>
+        <ol style="font-size:1.38cqw">
+          <li>Add <strong>one</strong> known weight — a scout, or a measured container of water</li>
+          <li>Let the raft settle completely</li>
+          <li>Measure the draft at all four corners</li>
+          <li>Record it before adding anything else</li>
+          <li>Repeat until you reach your design load</li>
+        </ol>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.1cqw">
+        <div class="note" style="border-left-color:var(--acqua)"><span class="k">Known weights only</span>Weigh each scout on the scale before they board. "About 70 kg" is not data.</div>
+        <div class="note" style="border-left-color:var(--terracotta)"><span class="k">Load evenly</span>Place each new weight where your Week 2 layout said it goes. Changing the plan mid-test makes the results meaningless.</div>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">06</div>
+  <div class="notes"><b>One variable at a time</b> is the core experimental discipline of the whole course. Name it as such — it's the reason their data will be worth analysing.</div>
+</section>
+
+<!-- 7 PHASE 3 -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Phase Three</span>Maximum load — and when to stop</h1>
+    <div class="cols c2" style="flex:1;align-items:start">
+      <div>
+        <p style="font-size:1.42cqw;margin-bottom:1.1cqw">Keep adding weight past the design load, carefully, until <strong>one</strong> of these happens.</p>
+        <div class="calc" style="border-left-color:var(--terracotta);font-size:1.28cqw">
+          <span class="lbl">Stop immediately if</span>
+          <span class="step">· Freeboard drops below 5 cm</span>
+          <span class="step">· Water comes over any edge</span>
+          <span class="step">· Any joint creaks, moves or shifts</span>
+          <span class="step">· The raft starts to list</span>
+          <span class="step res">· Anyone says stop</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.1cqw">
+        <div class="rule-box" style="background:var(--pina)">
+          <span class="k">We are not testing to destruction</span>
+          <span class="t">The answer you want is the last load that was clearly safe.</span>
+          <p>Real engineers test prototypes to failure in a laboratory — never with people aboard.</p>
+        </div>
+        <div class="note"><span class="k">Record the moment</span>Write down the load, the draft, and <em>which</em> condition made you stop. That last detail is worth marks.</div>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">07</div>
+  <div class="notes"><b>Supervisors call the stop, not the patrol.</b> Watch freeboard continuously during this phase. Use water containers rather than extra scouts beyond the design load.</div>
+</section>
+
+<!-- 8 MEASURING DRAFT -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Technique</span>How to measure draft accurately</h1>
+    <div class="cols c85" style="flex:1;align-items:center">
+      <div>
+        <svg viewBox="0 0 300 190" role="img" aria-label="A marked stick held against the raft edge to read draft at the waterline">
+          <rect x="0" y="96" width="300" height="94" fill="#DCE8E6"/>
+          <rect x="30" y="52" width="180" height="76" fill="#CF893A" stroke="#963417" stroke-width="2.5"/>
+          <rect x="30" y="96" width="180" height="32" fill="#B0702C" stroke="#963417" stroke-width="2.5"/>
+          <line x1="0" y1="96" x2="300" y2="96" stroke="#628981" stroke-width="3"/>
+          <rect x="228" y="22" width="17" height="140" fill="#F2EDE5" stroke="#2D5016" stroke-width="2.5"/>
+          <g stroke="#2D5016" stroke-width="2">
+            <line x1="228" y1="42" x2="245" y2="42"/><line x1="228" y1="62" x2="239" y2="62"/>
+            <line x1="228" y1="82" x2="245" y2="82"/><line x1="228" y1="102" x2="239" y2="102"/>
+            <line x1="228" y1="122" x2="245" y2="122"/><line x1="228" y1="142" x2="239" y2="142"/>
+          </g>
+          <circle cx="236" cy="96" r="7" fill="none" stroke="#963417" stroke-width="3"/>
+          <text x="254" y="100" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="#963417">read</text>
+          <text x="254" y="114" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="#963417">here</text>
+          <text x="120" y="152" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#4B6A64">submerged depth = draft</text>
+        </svg>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.0cqw">
+        <div class="note" style="border-left-color:var(--pina)"><span class="k">Use a marked stick</span>Mark a straight stick in centimetres. Hold it vertically against the raft's edge and read where the waterline crosses it.</div>
+        <div class="note" style="border-left-color:var(--acqua)"><span class="k">Eye level with the water</span>Reading from above makes the draft look smaller than it is. Crouch down.</div>
+        <div class="note" style="border-left-color:var(--solace)"><span class="k">Wait for stillness</span>Let the ripples settle. If it's windy, take three readings and average them.</div>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">08</div>
+  <div class="notes"><b>Parallax is the big one.</b> Demonstrate it — read a stick from standing, then from crouching. The difference is often 2 cm, which is larger than most of the effects they're trying to detect.</div>
+</section>
+
+<!-- 9 DIVIDER -->
+<section class="slide divider" style="background:var(--pina)">
+  <div class="eyebrow" style="color:#B9C4A8">Part Two</div>
+  <h1>Making sense of the numbers</h1>
+  <div class="tag" style="color:#8FA07C">Week 3 · Testing &amp; Analysis</div><div class="num" style="color:#F0C89A">09</div>
+  <div class="notes"><b>Back on the bank, dry, with clipboards.</b> This half is where the marks are.</div>
+</section>
+
+<!-- 10 DATA -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">A Real Patrol's Data</span>Predicted against measured</h1>
+    <table style="font-size:1.24cqw">
+      <thead><tr><th>Load added</th><th style="text-align:right">Total mass</th><th style="text-align:right">Predicted draft</th><th style="text-align:right">Measured draft</th><th style="text-align:right">Difference</th></tr></thead>
+      <tbody>
+        <tr><td>none</td><td class="n">198 kg</td><td class="n">3.3 cm</td><td class="n">4.7 cm</td><td class="n">+1.4</td></tr>
+        <tr><td>1 scout</td><td class="n">278 kg</td><td class="n">4.6 cm</td><td class="n">6.1 cm</td><td class="n">+1.4</td></tr>
+        <tr><td>2 scouts</td><td class="n">358 kg</td><td class="n">6.0 cm</td><td class="n">7.4 cm</td><td class="n">+1.4</td></tr>
+        <tr><td>3 scouts</td><td class="n">438 kg</td><td class="n">7.3 cm</td><td class="n">8.7 cm</td><td class="n">+1.4</td></tr>
+        <tr class="hi"><td>4 scouts — design load</td><td class="n">518 kg</td><td class="n">8.6 cm</td><td class="n">10.1 cm</td><td class="n">+1.4</td></tr>
+        <tr><td>+ 80 kg water</td><td class="n">598 kg</td><td class="n">10.0 cm</td><td class="n">11.4 cm</td><td class="n">+1.4</td></tr>
+        <tr><td>+ 160 kg water</td><td class="n">678 kg</td><td class="n">11.3 cm</td><td class="n">12.7 cm</td><td class="n">+1.4</td></tr>
+      </tbody>
+    </table>
+    <div class="note" style="margin-top:auto;border-left-color:var(--solace)"><span class="k">Look at the last column before you read on</span>The raft sat deeper than predicted <strong>every single time</strong> — and by the <em>same amount</em> every time. That pattern is the most valuable thing in the table.</div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">10</div>
+  <div class="notes"><b>Pause here.</b> Ask what they notice before advancing. Someone will spot that the difference never changes. Let them say it — the next three slides build on it.</div>
+</section>
+
+<!-- 11 PERCENT ERROR -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Quantify It</span>Percentage error</h1>
+    <div class="eq">% error &nbsp;=&nbsp; <span class="v">(predicted − measured)</span> ÷ measured × 100</div>
+    <div class="cols c2" style="margin-top:.4cqw;flex:1;align-items:start">
+      <div class="calc" style="font-size:1.32cqw">
+        <span class="lbl">At the design load</span>
+        <span class="step">Predicted = 8.6 cm</span>
+        <span class="step">Measured &nbsp;= 10.1 cm</span>
+        <span class="step">(8.6 − 10.1) ÷ 10.1 × 100</span>
+        <span class="step res">= −14.1%</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.1cqw">
+        <div class="note"><span class="k">Read the sign</span>A <strong>negative</strong> result means you predicted <em>less</em> than really happened. The raft sat 14% deeper than the maths said it would.</div>
+        <div class="note" style="border-left-color:var(--acqua)"><span class="k">Is 14% bad?</span>For a first prototype built by hand from rough materials, 14% is a <strong>good</strong> result. What matters is whether you can explain it.</div>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">11</div>
+  <div class="notes"><b>Insist on the sign.</b> "14% out" is a weaker answer than "14% under-predicted". Direction tells you where to look for the cause.</div>
+</section>
+
+<!-- 12 BACK-CALC -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">The Clever Bit</span>Working backwards to find the missing mass</h1>
+    <div class="cols c58" style="flex:1;align-items:start">
+      <div class="calc" style="font-size:1.3cqw">
+        <span class="lbl">Turn the measured draft back into kilograms</span>
+        <span class="step">Measured draft &nbsp;&nbsp;= 10.05 cm = 0.1005 m</span>
+        <span class="step">Waterplane area = 6.0 m²</span>
+        <span class="step">Volume displaced = 0.1005 × 6.0 = 0.603 m³</span>
+        <span class="step">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 603 ℓ → 603 kg afloat</span>
+        <span class="cmt">─────────────────────────────</span>
+        <span class="step">We predicted &nbsp;&nbsp;&nbsp;= 518 kg</span>
+        <span class="step res">Unaccounted mass = 85 kg</span>
+      </div>
+      <div class="rule-box">
+        <span class="k">What just happened</span>
+        <span class="t">One measurement with a stick told you there were 85 unexplained kilograms on your raft.</span>
+        <p>You never weighed it. You worked it out from how deep it sat — which is Archimedes' Principle, running in reverse.</p>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">12</div>
+  <div class="notes"><b>The intellectual high point of the course.</b> They are using the principle from slide 4 of Week 1 as a measuring instrument. Say that out loud — it's the moment physics becomes a tool rather than a topic.</div>
+</section>
+
+<!-- 13 WHERE IT WENT -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Accounting For It</span>So where were the 85 kg?</h1>
+    <table>
+      <thead><tr><th>Source</th><th style="text-align:right">Estimate</th><th>How you'd confirm it</th></tr></thead>
+      <tbody>
+        <tr><td>Crew heavier than the assumed 80 kg</td><td class="n">+40 kg</td><td>Weigh each scout — you have the scale</td></tr>
+        <tr><td>Water inside a leaking float</td><td class="n">+25 kg</td><td>Lift each float out and shake it</td></tr>
+        <tr><td>Timber absorbed water</td><td class="n">+15 kg</td><td>Weigh an offcut dry, then soaked</td></tr>
+        <tr><td>Wet rope and lashings</td><td class="n">+5 kg</td><td>Weigh a metre of rope wet and dry</td></tr>
+        <tr class="hi"><td>Total</td><td class="n">+85 kg</td><td>Matches the measurement exactly</td></tr>
+      </tbody>
+    </table>
+    <div class="note" style="margin-top:auto" ><span class="k">This is what "error analysis" means</span>Not apologising for being wrong — <strong>naming each cause and putting a number on it</strong>, until the numbers add up to the gap you measured.</div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">13</div>
+  <div class="notes"><b>Have them do this for their own raft.</b> They must list causes <i>and</i> estimate magnitudes. A list without numbers scores about half marks in Section 3 of the homework.</div>
+</section>
+
+<!-- 14 SYSTEMATIC VS RANDOM -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Two Kinds of Error</span>Systematic or random?</h1>
+    <div class="cols c2" style="flex:1;gap:1.8cqw;align-items:start">
+      <div class="rule-box" style="background:var(--terracotta)">
+        <span class="k" style="color:#F5CDA4">Systematic</span>
+        <span class="t">Wrong by the same amount, every time.</span>
+        <p>Our +1.4 cm on every row. Caused by something constant — unaccounted mass, a mis-set scale, always reading the stick from above.</p>
+        <p style="margin-top:.6cqw;color:#F5CDA4"><strong>Fix:</strong> find the cause and correct it. Averaging more readings will not help at all.</p>
+      </div>
+      <div class="rule-box" style="background:var(--acqua)">
+        <span class="k">Random</span>
+        <span class="t">Scattered — sometimes high, sometimes low.</span>
+        <p>Ripples on the water, a slightly different eye position, someone shifting their weight as you read.</p>
+        <p style="margin-top:.6cqw;color:#DDE8E5"><strong>Fix:</strong> take more readings and average. The scatter shrinks; the true value emerges.</p>
+      </div>
+    </div>
+    <div class="note" style="margin-top:auto"><span class="k">How to tell which you have</span>Look down the difference column. <strong>Constant</strong> → systematic. <strong>Jumping around zero</strong> → random. Ours was dead constant, which is why we went hunting for hidden mass rather than re-measuring.</div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">14</div>
+  <div class="notes"><b>Genuine science-fair-grade content.</b> If they take one transferable idea from this course into school physics, make it this one.</div>
+</section>
+
+<!-- 15 LINEARITY -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">The Relationship</span>Is draft proportional to weight?</h1>
+    <div class="cols c85" style="flex:1;align-items:center">
+      <div>
+        <svg viewBox="0 0 310 200" role="img" aria-label="Chart of draft against total mass showing two parallel straight lines, measured above predicted">
+          <line x1="44" y1="168" x2="298" y2="168" stroke="#241E19" stroke-width="2"/>
+          <line x1="44" y1="168" x2="44" y2="16" stroke="#241E19" stroke-width="2"/>
+          <line x1="44" y1="146" x2="298" y2="44" stroke="#628981" stroke-width="3" stroke-dasharray="7 5"/>
+          <line x1="44" y1="122" x2="298" y2="20" stroke="#963417" stroke-width="3.5"/>
+          <g fill="#963417"><circle cx="44" cy="122" r="4.5"/><circle cx="86" cy="105" r="4.5"/><circle cx="129" cy="88" r="4.5"/><circle cx="171" cy="71" r="4.5"/><circle cx="213" cy="54" r="4.5"/><circle cx="256" cy="37" r="4.5"/><circle cx="298" cy="20" r="4.5"/></g>
+          <text x="190" y="34" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="600" fill="#963417">measured</text>
+          <text x="196" y="72" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="600" fill="#628981">predicted</text>
+          <text x="44" y="186" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#6B6058">198</text>
+          <text x="171" y="186" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#6B6058">438</text>
+          <text x="298" y="186" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#6B6058">678</text>
+          <text x="171" y="198" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#6B6058">total mass (kg)</text>
+          <text x="14" y="104" font-family="IBM Plex Mono,monospace" font-size="11" fill="#6B6058" transform="rotate(-90 14 104)">draft (cm)</text>
+        </svg>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.0cqw">
+        <p style="font-size:1.4cqw">Both lines are <strong>straight and parallel</strong>. Draft really is proportional to load — 1.33 cm for every 80 kg, exactly as the maths predicted.</p>
+        <div class="note" style="border-left-color:var(--pina)"><span class="k">So the physics was right</span>The <em>slope</em> matched perfectly. Only the <em>starting point</em> was wrong — which is precisely what a systematic error looks like on a graph.</div>
+        <div class="note" style="border-left-color:var(--terracotta)"><span class="k">When it stops being straight</span>Once a round drum passes its halfway point, less new area meets the water each centimetre — so draft starts climbing faster. Load past that and the line bends upward, sharply.</div>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">15</div>
+  <div class="notes"><b>Parallel lines = right physics, wrong constant.</b> That single visual idea is worth more than the whole table. Sketch both lines on the board if the projector is outdoors and hard to see.</div>
+</section>
+
+<!-- 16 ACTUAL SF -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">The Verdict</span>Your actual safety factor</h1>
+    <div class="cols c2" style="flex:1;align-items:start">
+      <div class="calc" style="font-size:1.3cqw">
+        <span class="lbl">Against the design load</span>
+        <span class="step">Net lift &nbsp;&nbsp;&nbsp;&nbsp;= 1 232 kg</span>
+        <span class="step">Design load = 320 kg</span>
+        <span class="step res">SF = 1 232 ÷ 320 = 3.9×</span>
+      </div>
+      <div class="calc" style="border-left-color:var(--terracotta);font-size:1.3cqw">
+        <span class="lbl">Against what was really aboard</span>
+        <span class="step">Net lift &nbsp;&nbsp;&nbsp;&nbsp;= 1 232 kg</span>
+        <span class="step">Actual load = 405 kg</span>
+        <span class="step res">SF = 1 232 ÷ 405 = 3.0×</span>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="v">3.0×</div><div class="l">real margin, measured — not assumed</div></div>
+      <div class="stat"><div class="v">1.5×</div><div class="l">the minimum we required</div></div>
+      <div class="stat"><div class="v">2×</div><div class="l">better than required, even after every error</div></div>
+    </div>
+    <div class="note" style="margin-top:auto;border-left-color:var(--pina)"><span class="k">The lesson of the whole course</span>The design lost capacity at every stage — nominal materials, water absorption, heavier crew. It stayed safe because the margin was built in <strong>from the first calculation</strong>, not added at the end.</div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">16</div>
+  <div class="notes"><b>Close the argument that started in Week 1, slide 14.</b> They now have measured proof that the 1.5× rule earned its place.</div>
+</section>
+
+<!-- 17 GOOD ANALYSIS -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Standard</span>What good analysis looks like</h1>
+    <div class="cols c2" style="flex:1;gap:2.2cqw;align-items:start">
+      <div>
+        <h3 style="color:var(--pina)">Strong</h3>
+        <ul style="margin-top:1.0cqw;font-size:1.32cqw">
+          <li>"We predicted 8.6 cm and measured 10.1 cm — 14% under."</li>
+          <li>"The gap was constant, so the cause is systematic."</li>
+          <li>"Working back, 85 kg was unaccounted for."</li>
+          <li>"Weighing the crew found 40 kg of it; a wet float held 25 kg more."</li>
+          <li>"Next time we weigh the crew and bubble-test on the day."</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="color:var(--terracotta)">Weak</h3>
+        <ul style="margin-top:1.0cqw;font-size:1.32cqw">
+          <li>"It floated fine."</li>
+          <li>"Our calculations were a bit off."</li>
+          <li>"There was probably some human error."</li>
+          <li>"The raft was heavier than we thought."</li>
+          <li>"Next time we'd build it better."</li>
+        </ul>
+      </div>
+    </div>
+    <div class="rule-box" style="margin-top:auto">
+      <span class="k">The difference</span>
+      <span class="t">Every strong statement carries a <em style="color:#F5CDA4">number</em> and a <em style="color:#F5CDA4">cause</em>. "Human error" on its own is not an explanation — it's a way of not giving one.</span>
+    </div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">17</div>
+  <div class="notes"><b>Put this slide up while they write their analysis.</b> It is effectively the marking rubric for Sections 2 and 3 of tonight's homework.</div>
+</section>
+
+<!-- 18 PRESENTATIONS -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Now Present It</span>Five minutes per patrol</h1>
+    <div class="cols c58" style="flex:1;align-items:start">
+      <div>
+        <ol style="font-size:1.36cqw">
+          <li><strong>Our design</strong> — what we built and why we chose those materials</li>
+          <li><strong>Our prediction</strong> — the numbers we committed to last week</li>
+          <li><strong>What happened</strong> — the measured data</li>
+          <li><strong>The difference</strong> — how big, which direction, and why</li>
+          <li><strong>What we'd change</strong> — one specific improvement, with a reason</li>
+        </ol>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.1cqw">
+        <div class="note" style="border-left-color:var(--acqua)"><span class="k">Everyone speaks</span>Each member of the patrol presents at least one of the five sections.</div>
+        <div class="note" style="border-left-color:var(--solace)"><span class="k">Show the numbers</span>Hold up your data sheet. Point at the row you're talking about.</div>
+        <div class="note" style="border-left-color:var(--terracotta)"><span class="k">Surprises are welcome</span>If something failed, say so and explain it. A well-explained failure scores higher than an unexamined success.</div>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">18</div>
+  <div class="notes"><b>Keep to five minutes.</b> Ask one probing question per patrol — usually "how do you know?" Budget 30 minutes for four to six patrols.</div>
+</section>
+
+<!-- 19 ASSESSMENT -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">How You're Assessed</span>Across all three weeks</h1>
+    <table>
+      <thead><tr><th>Component</th><th style="text-align:right">Marks</th><th>What earns them</th></tr></thead>
+      <tbody>
+        <tr><td>Week 1 homework</td><td class="n">70 + 10</td><td>Material research, physics understanding, calculations</td></tr>
+        <tr><td>Week 2 homework</td><td class="n">70 + 5</td><td>Verified measurements, balance, recalculated buoyancy</td></tr>
+        <tr><td>Week 3 homework</td><td class="n">100 + 5</td><td>Test data, analysis, error accounting, reflection</td></tr>
+        <tr><td>Patrol presentation</td><td class="n">assessed</td><td>Clarity, evidence, honesty about what went wrong</td></tr>
+        <tr class="hi"><td>Course total</td><td class="n">240 + 20</td><td>Method and reasoning throughout, not just right answers</td></tr>
+      </tbody>
+    </table>
+    <div class="note" style="margin-top:auto"><span class="k">Said once more, because it matters</span>Correct, clearly shown working with a wrong final answer scores well. A right answer with no working scores very little. <strong>We are marking how you think.</strong></div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">19</div>
+  <div class="notes"><b>Confirm the badge requirements</b> your group is signing off against, and tell them when marks and feedback will come back.</div>
+</section>
+
+<!-- 20 HOMEWORK -->
+<section class="slide">
+  <div class="flow">
+    <h1><span class="lead">Final Submission</span>Homework — 100 marks + 5 bonus</h1>
+    <div class="cols c2" style="flex:1;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:.9cqw">
+        <div class="calc" style="border-left-color:var(--acqua);font-size:1.22cqw"><span class="lbl">Section 1 · 20 marks</span>Test data — your three phases, as recorded</div>
+        <div class="calc" style="border-left-color:var(--pina);font-size:1.22cqw"><span class="lbl">Section 2 · 25 marks</span>Data analysis — predicted vs actual, your real safety factor</div>
+        <div class="calc" style="border-left-color:var(--terracotta);font-size:1.22cqw"><span class="lbl">Section 3 · 25 marks</span>Error analysis — named causes with estimated magnitudes</div>
+        <div class="calc" style="border-left-color:var(--solace);font-size:1.22cqw"><span class="lbl">Section 4 · 20 marks</span>Reflection — what you learned and would change</div>
+        <div class="calc" style="border-left-color:var(--acqua);font-size:1.22cqw"><span class="lbl">Section 5 · 10 marks</span>Stability — did it self-right when tilted?</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.1cqw">
+        <div class="note"><span class="k">Write it while it's fresh</span>Do Section 1 tonight, from your data sheet. Details you think you'll remember, you won't.</div>
+        <div class="note" style="border-left-color:var(--solace)"><span class="k">Bonus · 5 marks</span>Find a real vessel — a whitewater raft, a ferry, a cargo barge — and explain how these same principles govern it.</div>
+        <div class="note" style="border-left-color:var(--pina)"><span class="k">Reference guide</span>Percentage error and error types are Section 7 of your Physics &amp; Maths guide.</div>
+      </div>
+    </div>
+  </div>
+  <div class="tag">Week 3 · Testing &amp; Analysis</div><div class="num">20</div>
+  <div class="notes"><b>Photograph the data sheets before they leave</b> — paper gets lost between here and home, and Section 1 depends on it.</div>
+</section>
+
+<!-- 21 CLOSE -->
+<section class="slide divider" style="background:var(--pina)">
+  <div class="eyebrow" style="color:#B9C4A8">End of the course</div>
+  <h1>You calculated it, built it, and proved it.</h1>
+  <p style="color:#B9C4A8;font-size:1.8cqw;margin-top:1.6cqw;max-width:46ch">Three weeks ago a steel ship floating was a puzzle. Today you can work out how much it carries — and how far out your answer is.</p>
+  <div class="tag" style="color:#8FA07C">Week 3 · Testing &amp; Analysis</div><div class="num" style="color:#F0C89A">21</div>
+  <div class="notes"><b>Certificates and badge sign-off.</b> Name one specific good decision from each patrol before you hand theirs over — it takes two minutes and they remember it for years.</div>
+</section>
+
+</div>
+</div>
+
+<progress id="prog" max="21" value="1"></progress>
+
+<div class="bar">
+  <button type="button" id="prev">← Prev</button>
+  <button type="button" id="next">Next →</button>
+  <button type="button" id="notesBtn">Notes</button>
+  <button type="button" id="printBtn">Print</button>
+  <span class="hint">Arrow keys · N for notes · F for full screen</span>
+  <span class="count"><b id="cur">1</b> / 21</span>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0, cur=document.getElementById('cur'), prog=document.getElementById('prog');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){s.classList.toggle('on',k===i);});
+    cur.textContent=i+1; prog.value=i+1;
+  }
+  document.getElementById('next').onclick=function(){show(i+1);};
+  document.getElementById('prev').onclick=function(){show(i-1);};
+  document.getElementById('printBtn').onclick=function(){window.print();};
+  document.getElementById('notesBtn').onclick=function(){document.body.classList.toggle('notes-on');};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();show(i+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1);}
+    else if(e.key==='Home'){show(0);}
+    else if(e.key==='End'){show(slides.length-1);}
+    else if(e.key==='n'||e.key==='N'){document.body.classList.toggle('notes-on');}
+    else if(e.key==='f'||e.key==='F'){
+      var d=document.getElementById('deck');
+      if(!document.fullscreenElement){d.requestFullscreen&&d.requestFullscreen();}
+      else{document.exitFullscreen();}
+    }
+  });
+  var x0=null;
+  var deck=document.getElementById('deck');
+  deck.addEventListener('touchstart',function(e){x0=e.changedTouches[0].clientX;},{passive:true});
+  deck.addEventListener('touchend',function(e){
+    if(x0===null)return; var dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>50){show(dx<0?i+1:i-1);} x0=null;
+  },{passive:true});
+  show(0);
+})();
+</script>
+</body>
+</html>
